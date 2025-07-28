@@ -1,8 +1,8 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "./globals.css" // Import globals.css at the top of the file
-import "./new-globals02.css"
+// 削除されたglobals.cssへの参照を削除します
+import "./new-globals02.css" // これがすべてのグローバルスタイルを含むファイルです
 import { ThemeProvider } from "@/components/theme-provider"
 import LenisSetup from "@/components/lenis-setup"
 
