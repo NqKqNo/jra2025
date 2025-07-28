@@ -1,0 +1,234 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+
+    /* Custom properties for sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Custom colors */
+    --light-blue: #1fa9ea;
+    --dark-blue: #2eaae4;
+    --medium-blue: #50c4f2;
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: 240 10% 3.9%;
+      --foreground: 0 0% 98%;
+      --card: 240 10% 3.9%;
+      --card-foreground: 0 0% 98%;
+      --popover: 240 10% 3.9%;
+      --popover-foreground: 0 0% 98%;
+      --primary: 0 0% 98%;
+      --primary-foreground: 240 5.9% 10%;
+      --secondary: 240 3.7% 15.9%;
+      --secondary-foreground: 0 0% 98%;
+      --muted: 240 3.7% 15.9%;
+      --muted-foreground: 240 5% 64.9%;
+      --accent: 240 3.7% 15.9%;
+      --accent-foreground: 0 0% 98%;
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 240 3.7% 15.9%;
+      --input: 240 3.7% 15.9%;
+      --ring: 240 4.9% 83.9%;
+
+      /* Custom properties for sidebar */
+      --sidebar-background: 240 5.9% 10%;
+      --sidebar-foreground: 240 4.8% 95.9%;
+      --sidebar-primary: 0 0% 98%;
+      --sidebar-primary-foreground: 240 5.9% 10%;
+      --sidebar-accent: 240 3.7% 15.9%;
+      --sidebar-accent-foreground: 240 4.8% 95.9%;
+      --sidebar-border: 240 3.7% 15.9%;
+      --sidebar-ring: 217.2 91.2% 59.8%;
+      --foreground-rgb: 255, 255, 255;
+      --background-start-rgb: 0, 0, 0;
+      --background-end-rgb: 0, 0, 0;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  @apply font-sans; /* Assuming a default sans-serif, adjust if a specific font is preferred */
+}
+
+* {
+  @apply border-border;
+}
+
+.animated-text-line {
+  position: relative;
+  overflow: hidden; /* ワイプ効果のために必須 */
+  display: block; /* 各spanを独立した行にする */
+  z-index: 2; /* テキストをワイプの上に表示 */
+  background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.animated-text-line::before {
+  content: "" !important; /* contentプロパティは必須 */
+  position: absolute;
+  top: 0;
+  /* leftとwidthのCSS変数を削除 */
+  width: 100%; /* 初期幅を100%に設定 */
+  height: 100%;
+  background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
+  z-index: 1;
+  /* GSAPでアニメーションさせるためのCSS変数を定義 */
+  transform: translateX(var(--wipe-x, 0%)); /* 新しいCSS変数と初期値 */
+  opacity: var(--wipe-opacity, 1); /* 新しいCSS変数と初期値 */
+}
+
+/* Custom scrollbar for news section */
+.custom-news-scrollbar::-webkit-scrollbar {
+  width: 4px; /* スクロールバーの幅 */
+}
+
+.custom-news-scrollbar::-webkit-scrollbar-track {
+  background: #e2e4e2; /* トラックの色 */
+  border-radius: 2px; /* トラックの角を丸くする */
+}
+
+.custom-news-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #00aa43; /* サムの色 */
+  border-radius: 2px; /* サムの角を丸くする */
+}
+
+.custom-news-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #008833; /* ホバー時のサムの色 */
+}
+
+.earth-action-section {
+  /* Add any specific styles for the section here */
+}
+
+.earth-action-content-container {
+  /* Add any specific styles for the content container here */
+}
+
+.earth-action-sidebar-container {
+  /* Add any specific styles for the left sidebar container here */
+}
+
+.earth-action-sidebar-inner-wrapper {
+  /* Add any specific styles for the inner wrapper here */
+}
+
+.earth-action-background-curve {
+  /* Add any specific styles for the background curve image here */
+}
+
+.earth-action-content-wrapper {
+  /* Add any specific styles for the content wrapper (title, subtitle, button) here */
+}
+
+.earth-action-title {
+  /* Add any specific styles for the title here */
+}
+
+.earth-action-title-prefix {
+  /* Add any specific styles for the title prefix here */
+}
+
+.earth-action-subtitle {
+  /* Add any specific styles for the subtitle here */
+}
+
+.earth-action-button {
+  /* Add any specific styles for the button here */
+}
+
+.earth-action-button-icon {
+  /* Add any specific styles for the button icon here */
+}
+
+.earth-action-globe-icon-container {
+  /* Add any specific styles for the globe icon container here */
+}
+
+.earth-action-globe-icon {
+  /* Add any specific styles for the globe icon here */
+}
+
+.earth-action-main-content-area {
+  /* Add any specific styles for the right content area here */
+}
+
+.earth-action-section-group {
+  /* Add any specific styles for each section group here */
+}
+
+.earth-action-section-header {
+  /* Add any specific styles for the section header here */
+}
+
+.earth-action-section-number-circle {
+  /* Add any specific styles for the section number circle here */
+}
+
+.earth-action-section-title {
+  /* Add any specific styles for the section title here */
+}
+
+.earth-action-section-arrow-icon {
+  /* Add any specific styles for the section arrow icon here */
+}
+
+.earth-action-cards-grid {
+  /* Add any specific styles for the cards grid here */
+}
+
+.earth-action-card {
+  /* Add any specific styles for each card here */
+}
+
+.earth-action-card-image-wrapper {
+  /* Add any specific styles for the card image wrapper here */
+}
+
+.earth-action-card-text {
+  /* Add any specific styles for the card text here */
+}

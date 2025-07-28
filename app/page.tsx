@@ -1,12 +1,22 @@
-"use client"
+"use client" // クライアントコンポーネントとしてマーク
 
 import Header from "@/components/header"
-import Footer from "@/components/footer"
+import HeroSection from "@/components/hero-section"
+import BannerSection from "@/components/banner-section"
+import NewsSection from "@/components/news-section"
+import BeWithHeroSection from "@/components/be-with-hero-section"
+import SocialSustainabilityActionTitleSection from "@/components/social-sustainability-action-title-section"
 import EarthActionSection from "@/components/earth-action-section"
+import LifeActionSection from "@/components/life-action-section"
+import SocietyActionSection from "@/components/society-action-section"
+import ConsumerActionSection from "@/components/consumer-action-section"
+import ReportSection from "@/components/report-section"
+import CmGallerySection from "@/components/cm-gallery-section"
+import Footer from "@/components/footer"
 import { useEffect, useRef, useState, useLayoutEffect } from "react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
-export default function EarthActionPage() {
+export default function Page() {
   const headerRef = useRef<HTMLElement>(null)
   const [headerHeight, setHeaderHeight] = useState(143) // 推定されるヘッダーの高さ (px)
   const animationFrameId = useRef<number | null>(null)
@@ -86,8 +96,19 @@ export default function EarthActionPage() {
   return (
     <>
       <Header ref={headerRef} />
+      {/* すべてのコンテンツをヘッダーの高さ分のパディングを持つdivでラップ */}
       <div style={{ paddingTop: `${headerHeight}px` }}>
-        <EarthActionSection />
+        <HeroSection headerHeight={headerHeight} />
+        <BannerSection />
+        <NewsSection />
+        <BeWithHeroSection />
+        <SocialSustainabilityActionTitleSection />
+        <EarthActionSection className="action-section" />
+        <LifeActionSection className="action-section" />
+        <SocietyActionSection className="action-section" />
+        <ConsumerActionSection className="action-section" />
+        <ReportSection />
+        <CmGallerySection />
         <Footer />
       </div>
     </>
