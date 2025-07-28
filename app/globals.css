@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -9,6 +15,7 @@
   body {
     /* テスト用背景色: これが適用されればglobals.cssは読み込まれています */
     background-color: lime !important; /* 明るいライムグリーン色 */
+    @apply text-foreground;
   }
 
   /* Custom styles for animated text lines */
