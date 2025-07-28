@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-pink-300 text-foreground; /* テスト用に背景色をピンクに強制 */
+  }
+
+  /* Custom styles for animated text lines */
+  .animated-text-line {
+    position: relative;
+    overflow: hidden; /* ワイプ効果のために必須 */
+    display: block; /* 各spanを独立した行にする */
+    z-index: 2; /* 追加: テキストをワイプの上に表示 */
+    /* GSAPでアニメーションさせるためのCSS変数を定義 */
+    --before-left: 0%;
+    --before-width: 100%;
+
+    /* グラデーション文字色を各spanに直接適用 */
+    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent !important; /* !important を追加 */
+  }
+
+  .animated-text-line::before {
+    content: "" !important; /* !important を追加 */
+    position: absolute;
+    top: 0;
+    left: var(--before-left);
+    width: var(--before-width);
+    height: 100%;
+    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%); /* 元のグラデーションに戻す */
+    z-index: 1; /* テキストの上に表示されるようにする */
+  }
+}
+
+/* Custom scrollbar for news section */
+.custom-news-scrollbar::-webkit-scrollbar {
+  width: 4px; /* スクロールバーの幅 */
+}
+
+.custom-news-scrollbar::-webkit-scrollbar-track {
+  background: #e2e4e2; /* トラックの色 */
+  border-radius: 2px; /* トラックの角を丸くする */
+}
+
+.custom-news-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #00aa43; /* サムの色 */
+  border-radius: 2px; /* サムの角を丸くする */
+}
+
+.custom-news-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #008833; /* ホバー時のサムの色 */
+}
