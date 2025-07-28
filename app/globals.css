@@ -13,7 +13,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground; /* 元の背景色に戻す */
   }
 
   /* Custom styles for animated text lines */
@@ -31,16 +31,17 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    color: transparent !important; /* !important を追加 */
   }
 
   .animated-text-line::before {
-    content: "";
+    content: "" !important; /* contentプロパティは必須 */
     position: absolute;
     top: 0;
     left: var(--before-left);
     width: var(--before-width);
     height: 100%;
-    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%); /* 変更: ワイプの色をグラデーションに */
+    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%); /* 元のグラデーションに戻す */
     z-index: 1; /* テキストの上に表示されるようにする */
   }
 }

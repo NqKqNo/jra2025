@@ -1,12 +1,14 @@
 "use client" // クライアントコンポーネントとしてマーク
 
 import Image from "next/image"
-import { useEffect, useRef } from "react" // useRefをインポート
+import { useEffect, useRef, useCallback } from "react" // useRef, useCallbackを追加
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 export default function EarthActionSection() {
   const sectionRef = useRef(null)
   const rightSidebarRef = useRef(null)
+  const scrollTriggerInstance = useRef<ScrollTrigger | null>(null) // ScrollTriggerインスタンスを保持するref
+  const resizeObserverAnimationFrameId = useRef<number | null>(null) // ResizeObserverのrequestAnimationFrame ID
 
   // sectionsデータをコンポーネント内に直接定義
   const sections = [
@@ -54,72 +56,78 @@ export default function EarthActionSection() {
     },
   ]
 
-  useEffect(() => {
+  // ScrollTriggerをリフレッシュまたは作成する関数をメモ化
+  const setupScrollTrigger = useCallback(() => {
     if (!sectionRef.current || !rightSidebarRef.current) return
 
     const section = sectionRef.current
     const rightSidebar = rightSidebarRef.current
 
-    // rightSidebarのコンテンツの高さが変更された場合にScrollTriggerを再計算するためのResizeObserver
-    const observer = new ResizeObserver(() => {
-      // 既存のScrollTriggerをキルして重複を防ぐ
-      ScrollTrigger.getById("earth-section-pin")?.kill()
-
-      const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-      if (scrollHeight > 0) {
-        // メインセクションのScrollTriggerを作成
-        ScrollTrigger.create({
-          id: "earth-section-pin", // IDを付与して管理しやすくする
-          trigger: section,
-          start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-          end: "bottom top", // rightSidebarのスクロール可能な高さ分だけ固定を継続
-          pin: true, // セクションを固定
-          scrub: "power3.inOut", // これがイージングを制御する設定です
-          snap: {
-            snapTo: 1,
-            duration: 0.5,
-            ease: "power3.inOut",
-          },
-          onUpdate: (self) => {
-            // メインスクロールの進行度に応じてrightSidebarのscrollTopを更新
-            rightSidebar.scrollTop = self.progress * scrollHeight
-          },
-          markers: true, // デバッグ用マーカーを有効化
-        })
-      }
-    })
-
-    // rightSidebarのサイズ変更を監視
-    observer.observe(rightSidebar)
-
-    // 初期レンダリング時のScrollTrigger設定
-    const initialScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-    if (initialScrollHeight > 0) {
-      ScrollTrigger.create({
-        id: "earth-section-pin",
+    if (scrollTriggerInstance.current) {
+      // If already exists, just refresh it
+      scrollTriggerInstance.current.refresh()
+    } else {
+      // Create ScrollTrigger if it doesn't exist
+      scrollTriggerInstance.current = ScrollTrigger.create({
+        id: "earth-section-pin", // IDを付与して管理しやすくする
         trigger: section,
-        start: "top top",
-        end: "bottom top",
-        pin: true,
-        scrub: "power3.inOut", // 修正: easeInOutCubicに相当するGSAPイージングを適用
+        start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
+        // endを関数にして、rightSidebarのスクロール可能な高さに基づいて動的に計算
+        end: () => {
+          const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+          return `+=${scrollHeight}` // rightSidebarのスクロール可能な高さ分だけ固定を継続
+        },
+        pin: true, // セクションを固定
+        scrub: "power3.inOut", // これがイージングを制御する設定です
         snap: {
           snapTo: 1,
           duration: 0.5,
           ease: "power3.inOut",
         },
         onUpdate: (self) => {
-          rightSidebar.scrollTop = self.progress * initialScrollHeight
+          // メインスクロールの進行度に応じてrightSidebarのscrollTopを更新
+          // onUpdate内でもscrollHeightを再計算することで、動的なコンテンツ変更に対応
+          const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+          rightSidebar.scrollTop = self.progress * currentScrollHeight
         },
         markers: true, // デバッグ用マーカーを有効化
       })
     }
+  }, []) // 依存配列は空で、refは安定しているため
+
+  useEffect(() => {
+    if (!sectionRef.current || !rightSidebarRef.current) return
+
+    const rightSidebar = rightSidebarRef.current
+
+    // 初期レンダリング時にScrollTriggerを設定
+    setupScrollTrigger()
+
+    // ResizeObserverを設定し、rightSidebarのコンテンツの高さが変更された場合にScrollTriggerをリフレッシュ
+    const observer = new ResizeObserver(() => {
+      if (resizeObserverAnimationFrameId.current) {
+        cancelAnimationFrame(resizeObserverAnimationFrameId.current)
+      }
+      resizeObserverAnimationFrameId.current = requestAnimationFrame(() => {
+        setupScrollTrigger() // ScrollTriggerをリフレッシュ
+        resizeObserverAnimationFrameId.current = null
+      })
+    })
+
+    observer.observe(rightSidebar)
 
     // コンポーネントアンマウント時のクリーンアップ
     return () => {
-      ScrollTrigger.getById("earth-section-pin")?.kill() // このセクションのScrollTriggerをキル
+      if (scrollTriggerInstance.current) {
+        scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
+        scrollTriggerInstance.current = null // refをクリア
+      }
       observer.disconnect() // ResizeObserverを解除
+      if (resizeObserverAnimationFrameId.current) {
+        cancelAnimationFrame(resizeObserverAnimationFrameId.current)
+      }
     }
-  }, []) // 空の依存配列により、マウント時に一度だけ実行
+  }, [setupScrollTrigger]) // setupScrollTriggerを依存配列に追加
 
   return (
     <section
