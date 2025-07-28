@@ -161,7 +161,7 @@ export default function BeWithHeroSection() {
           width: "1px",
           height: "235px",
           background: "linear-gradient(90deg, #01A284 0%, #30C558 100%)",
-          top: `calc(50% + ${600 * currentCircleScale}px)`, // ��の下端に配置
+          top: `calc(50% + ${600 * currentCircleScale}px)`, // ���の下端に配置
         }}
       />
 
