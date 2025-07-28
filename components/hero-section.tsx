@@ -23,17 +23,17 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
     // mv-action-links のアニメーション
     const linksTimer = setTimeout(() => {
       setShowActionLinks(true)
-    }, 6000) // 6秒の遅延
+    }, 7000) // 6秒の遅延
 
     // MVロゴのアニメーション
     const logoTimer = setTimeout(() => {
       setShowMvLogo(true)
-    }, 4000) // 4秒の遅延
+    }, 5000) // 4秒の遅延
 
     // mv-bottom-curve のアニメーション
     const bottomCurveTimer = setTimeout(() => {
       setShowMvBottomCurve(true)
-    }, 5000) // 5秒の遅延
+    }, 6000) // 5秒の遅延
 
     return () => {
       clearTimeout(circleTimer) // クリーンアップ
@@ -162,7 +162,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
         }`}
       />
       {/* Scroll Indicator */}
-      <div className="absolute right-4 bottom-4 md:right-8 md:bottom-8 flex flex-col items-center text-[#333333] text-sm font-bold mb-0">
+      <div className="absolute right-4 bottom-4 md:right-8 md:bottom-8 flex flex-col items-center text-[#333333] text-sm font-bold mb-0 z-20">
         <Image src="/images/mv-scroll-indicator.png" alt="Scroll Indicator" width={36} height={120} layout="fixed" />{" "}
         {/* widthとheightを1.5倍に調整 */}
       </div>
