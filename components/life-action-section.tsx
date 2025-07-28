@@ -80,7 +80,6 @@ export default function LifeActionSection() {
           const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
           rightSidebar.scrollTop = self.progress * currentScrollHeight
         },
-        // markers: true, // デバッグ用マーカーを無効化
       })
     }
   }, []) // 依存配列は空で、refは安定しているため

@@ -85,7 +85,7 @@
     @apply border-border;
   }
   body {
-    background-color: transparent !important; /* テスト用背景色を削除 */
+    background-color: lime !important; /* テスト用背景色: これが適用されればglobals.cssは読み込まれています */
     @apply text-foreground min-h-svh;
   }
 }
@@ -95,24 +95,27 @@
   overflow: hidden; /* ワイプ効果のために必須 */
   display: block; /* 各spanを独立した行にする */
   z-index: 2; /* テキストをワイプの上に表示 */
-  /* テキストの色をグラデーションに戻す */
-  -webkit-background-clip: text;
-  background-clip: text;
-  background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
-  color: transparent !important; /* グラデーションを適用するために透明に */
+  /* テキストの色を一時的に黒に設定 */
+  color: black !important;
+  /* グラデーションとbackground-clipを一時的に無効化 */
+  /* -webkit-background-clip: text; */
+  /* background-clip: text; */
+  /* background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%); */
 }
 
 .animated-text-line::before {
   content: "" !important; /* contentプロパティは必須 */
   position: absolute;
   top: 0;
+  /* leftとwidthのCSS変数を削除 */
   width: 100%; /* 初期幅を100%に設定 */
   height: 100%;
-  /* ワイプの背景色をグラデーションに戻す */
-  background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
+  /* ワイプの背景色を一時的にオレンジに設定 */
+  background-color: orange !important;
   z-index: 1;
-  transform: translateX(var(--wipe-x, 0%));
-  opacity: var(--wipe-opacity, 1);
+  /* GSAPでアニメーションさせるためのCSS変数を定義 */
+  transform: translateX(var(--wipe-x, 0%)); /* 新しいCSS変数と初期値 */
+  opacity: var(--wipe-opacity, 1); /* 新しいCSS変数と初期値 */
 }
 
 /* Custom scrollbar for news section */
