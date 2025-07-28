@@ -27,10 +27,6 @@ export default function Footer() {
             リンク
           </Link>
           <span className="text-gray-400">|</span>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            ご利用に際して
-          </Link>
-          <span className="text-gray-400">|</span>
           <Link href="#" className="flex items-center gap-1 hover:underline" prefetch={false}>
             Horse Racing in Japan
             <ExternalLinkIcon className="w-3 h-3" />

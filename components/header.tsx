@@ -1,4 +1,3 @@
-import type { Ref } from "react" // Ref型をインポート
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -11,14 +10,9 @@ import {
 } from "@/components/ui/breadcrumb"
 import { SearchIcon } from "lucide-react" // LockIcon, HelpCircleIcon は不要になったため削除
 
-// refを受け取るためのProps型を定義
-type HeaderProps = {
-  ref?: Ref<HTMLElement>
-}
-
-export default function Header({ ref }: HeaderProps) {
+export default function Header() {
   return (
-    <header ref={ref} className="w-full shadow-sm fixed top-0 left-0 right-0 z-50">
+    <header className="w-full shadow-sm sticky top-0 z-50">
       {/* トップバー */}
       <div className="w-full flex h-16 items-center justify-between bg-[#268300] px-4 md:px-6 mx-auto gap-x-0">
         <Link href="#" className="flex items-center gap-2" prefetch={false}>
@@ -108,6 +102,12 @@ export default function Header({ ref }: HeaderProps) {
                 {" "}
                 {/* text-xs から text-sm に変更 */}
                 サステナビリティ
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-gray-400" />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#" className="text-[#0066CC] font-bold text-sm text-black">
+                with地球
               </BreadcrumbLink>
             </BreadcrumbItem>
 
