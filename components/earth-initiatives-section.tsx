@@ -101,7 +101,7 @@ export default function EarthInitiativesSection() {
             type: "custom", // imageからcustomに変更
             content: (
               <div className="flex flex-col items-start p-2 text-left w-full py-0 px-0">
-                <h5 className="text-[#2EAAE4] text-base font-bold mb-2">ペットボトルからゼッケンへ</h5>
+                <h5 className="text-[#2EAAE4] text-base font-bold mb-2">調教用ゼッケン</h5>
                 <p className="text-[#333] text-sm mb-8">
                   調教用ゼッケンは粉砕されたフレークからリサイクル。1枚あたり500mlペットボトル12本分。
                 </p>
@@ -126,9 +126,7 @@ export default function EarthInitiativesSection() {
             content: (
               <div className="flex flex-col items-start p-2 text-left w-full py-0 px-0">
                 <h5 className="text-[#2EAAE4] text-base font-bold mb-2">調教用ゼッケン</h5>
-                <p className="text-[#333] text-sm mb-8">
-                  調教用ゼッケンは破損すると廃棄していましたが、リサイクル可能な素材に転換し、再資源化の取り組みを開始しました。
-                </p>
+                
                 <div className="w-full flex justify-center bg-transparent rounded-md mb-0 py-0 relative pt-[calc(100/250*100%)]">
                   <Image
                     src="/images/調教用ゼッケンをさらにリサイクル_illust.png"
