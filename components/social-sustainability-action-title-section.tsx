@@ -18,7 +18,7 @@ export default function SocialSustainabilityActionTitleSection() {
     console.log("Found textLines:", textLines)
     console.log("Found horseImages:", horseImages)
 
-    // 各ラインのテキストの初期状態を設定 (コメントアウトを解除)
+    // 各ラインのテキストの初期状態を設定
     gsap.set(textLines, { opacity: 0, y: "20%" })
     // 馬の画像の初期状態を設定
     gsap.set(horseImages, { opacity: 0, x: -100, zIndex: 25 })
@@ -28,7 +28,7 @@ export default function SocialSustainabilityActionTitleSection() {
         trigger: ".social-sustainability-title-container",
         start: "top bottom-=20%",
         once: true,
-        // markers: true, // マーカーは削除されたまま
+        markers: true, // デバッグ用にマーカーを有効化
         id: "social-sustainability-title-section-trigger",
         onEnter: () => console.log("ScrollTrigger entered!"),
         onLeave: () => console.log("ScrollTrigger left!"),
@@ -56,7 +56,7 @@ export default function SocialSustainabilityActionTitleSection() {
         0,
       )
 
-      // テキスト表示アニメーション (opacityとy-position) (コメントアウトを解除)
+      // テキスト表示アニメーション (opacityとy-position)
       lineTl.to(
         line,
         {
@@ -103,6 +103,7 @@ export default function SocialSustainabilityActionTitleSection() {
     return () => {
       tl.kill()
       ScrollTrigger.getById("social-sustainability-title-section-trigger")?.kill()
+      console.log("ScrollTrigger and timeline killed on unmount.")
     }
   }, [])
 
@@ -110,10 +111,7 @@ export default function SocialSustainabilityActionTitleSection() {
     <section className="relative w-full min-h-[300px] flex flex-col items-center justify-center px-4 md:px-6 overflow-hidden bg-gradient-to-b from-[#FFFFFF] to-[#F1F1F1] pb-40">
       {/* タイトルテキストと馬の画像 */}
       <div className="relative z-10 flex items-center justify-center social-sustainability-title-container">
-        <h2
-          className="text-center font-semibold text-[80px] leading-[92px] tracking-[1.6px] uppercase"
-          // style から gradient background-clip 関連のスタイルを削除
-        >
+        <h2 className="text-center font-semibold text-[80px] leading-[92px] tracking-[1.6px] uppercase">
           <span className="animated-text-line block">SOCIAL</span>
           <span className="animated-text-line block">SUSTAINABILITY</span>
           <span className="animated-text-line block">ACTION</span>
