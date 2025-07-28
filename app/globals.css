@@ -13,7 +13,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-pink-300 text-foreground; /* テスト用に背景色をピンクに強制 */
+    @apply bg-pink-300 text-foreground min-h-screen; /* min-h-screen を追加 */
   }
 
   /* Custom styles for animated text lines */
@@ -26,23 +26,22 @@
     --before-left: 0%;
     --before-width: 100%;
 
-    /* グラデーション文字色を各spanに直接適用 */
-    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent !important; /* !important を追加 */
+    /* グラデーション文字色を一時的に無効化し、単色でテスト */
+    color: blue !important; /* テスト用に青色に強制 */
+    /* -webkit-background-clip: text; */
+    /* -webkit-text-fill-color: transparent; */
+    /* background-clip: text; */
   }
 
   .animated-text-line::before {
-    content: "" !important; /* !important を追加 */
+    content: "" !important; /* contentプロパティは必須 */
     position: absolute;
     top: 0;
     left: var(--before-left);
     width: var(--before-width);
     height: 100%;
-    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%); /* 元のグラデーションに戻す */
-    z-index: 1; /* テキストの上に表示されるようにする */
+    background-color: red !important; /* テスト用に赤色に強制 */
+    z-index: 1; /* テキストの下に表示されるようにする */
   }
 }
 
