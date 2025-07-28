@@ -33,6 +33,10 @@ const config = {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -41,35 +45,24 @@ const config = {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        // Custom colors from new-globals02.css
+        // Custom colors for specific sections and elements
         "light-blue": "var(--light-blue)",
         "dark-blue": "var(--dark-blue)",
         "medium-blue": "var(--medium-blue)",
         "jra-green": "var(--jra-green)",
         "news-bg-alpha": "var(--news-bg-alpha)",
         "news-date-color": "var(--news-date-color)",
-        "news-card-shadow": "var(--news-card-shadow)",
-        // Sidebar custom colors
-        "sidebar-background": "var(--sidebar-background)",
-        "sidebar-foreground": "var(--sidebar-foreground)",
-        "sidebar-primary": "var(--sidebar-primary)",
-        "sidebar-primary-foreground": "var(--sidebar-primary-foreground)",
-        "sidebar-accent": "var(--sidebar-accent)",
-        "sidebar-accent-foreground": "var(--sidebar-accent-foreground)",
-        "sidebar-border": "var(--sidebar-border)",
-        "sidebar-ring": "var(--sidebar-ring)",
+      },
+      boxShadow: {
+        "news-card": "var(--news-card-shadow)", // Custom shadow for news card
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -89,6 +82,9 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        "noto-sans-jp": ["Noto Sans JP", "sans-serif"],
       },
     },
   },
