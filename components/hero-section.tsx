@@ -4,11 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useState, useEffect } from "react" // useStateとuseEffectをインポート
 
-type HeroSectionProps = {
-  headerHeight: number // headerHeightを受け取るためのプロップ型を定義
-}
-
-export default function HeroSection({ headerHeight }: HeroSectionProps) {
+export default function HeroSection() {
   const [showActionLinks, setShowActionLinks] = useState(false) // mv-action-links用
   const [showHeroCircleBg, setShowHeroCircleBg] = useState(false) // hero-background-circle用
   const [showMvLogo, setShowMvLogo] = useState(false) // MVロゴ用
@@ -44,10 +40,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
   }, [])
 
   return (
-    <section
-      className="relative w-full flex flex-col items-center justify-start text-white px-4 md:px-6 overflow-hidden"
-      style={{ minHeight: `calc(100vh - ${headerHeight}px)` }} // headerHeightに基づいて高さを調整
-    >
+    <section className="relative w-full flex flex-col items-center justify-start text-white px-4 md:px-6 overflow-hidden h-[100vh] mt-[-143px]">
       <video
         src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/FV-hRGlaNBfEfZ5LLx944trZMkieTlW8j.mp4"
         autoPlay
@@ -79,9 +72,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
       {/* MVセクション画面中央にロゴを追加 */}
 
       {/* アニメーションを追加するdiv - 親コンテナはレイアウトのみを担当 */}
-      <div className="mv-action-links relative z-20 flex flex-col md:flex-row gap-4 md:gap-4 mt-auto mb-0 md:mb-[50px]">
-        {" "}
-        {/* z-indexをz-20に変更 */}
+      <div className="mv-action-links relative z-0 flex flex-col md:flex-row gap-4 md:gap-4 mt-auto mb-0 md:mb-[50px]">
         {/* with 地球 */}
         <Link
           href="#earth-action-section"
@@ -157,8 +148,8 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
         alt="Bottom Curve"
         layout="fill"
         objectFit="cover"
-        className={`mv-bottom-curve absolute bottom-0 left-0 w-full z-10 transition-opacity duration-1000 ease-out ${
-          showMvBottomCurve ? "opacity-100" : "opacity-0"
+        className={`mv-bottom-curve absolute bottom-0 left-0 w-full h-auto z-[-1] transition-opacity duration-1000 ease-out ${
+          showMvBottomCurve ? "opacity-100" : "opacity-0" // アニメーション
         }`}
       />
       {/* Scroll Indicator */}
