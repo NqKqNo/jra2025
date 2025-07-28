@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useEffect, useRef, useCallback } from "react" // useRef, useCallbackを追加
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Button } from "@/components/ui/button"
 
 export default function EarthActionSection() {
   const sectionRef = useRef(null)
@@ -140,31 +141,53 @@ export default function EarthActionSection() {
       <div className="w-full relative z-10 flex flex-col md:flex-row py-10 earth-action-content-container gap-y-0 pl-0 pt-0 pb-0 h-full">
         {/* Left Sidebar "with 地球" section */}
         <div className="left-sidebar-container w-full md:w-[40%] flex justify-center md:justify-start earth-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
-          <div className="relative w-full h-full flex p-4 earth-action-sidebar-inner-wrapper px-0 py-0 items-start flex-row">
+          <div className="relative w-full h-full flex flex-col items-center justify-center earth-action-sidebar-inner-wrapper">
+            {/* Background image */}
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/with%E5%9C%B0%E7%90%83_round-xMx3CMWLq5e4VJBzDIfpS96H9uRTEQ.png"
-              alt="地球の丸い背景"
+              src="/images/with地球_round.png"
+              alt="with 地球 JRAの環境保全活動 背景"
               layout="fill"
-              objectFit="cover"
+              objectFit="contain"
               priority
-              className="absolute inset-0 z-0"
+              className="absolute inset-0 w-full h-full"
             />
-            <div className="relative z-10 flex flex-col items-center justify-center w-full h-full p-4">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/with%E5%9C%B0%E7%90%83_iconline-rbSK2lwllcizpNKTPYdl8PSCc1JquJ.png"
-                alt="地球アイコンとライン"
-                width={150}
-                height={150}
-                priority
-                className="mb-4"
-              />
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/with%E5%9C%B0%E7%90%83_section%20title-MzbmcGgtzUf1U3lLYuJ2NAVirIpD08.png"
-                alt="with 地球 JRAの環境保全活動タイトル"
-                width={300}
-                height={150}
-                priority
-              />
+
+            {/* Icon with line */}
+            <Image
+              src="/images/with地球_iconline.png"
+              alt="地球アイコン"
+              width={100}
+              height={100}
+              className="absolute top-[15%] left-[15%] z-20"
+            />
+
+            {/* Text and Button content */}
+            <div className="relative z-10 flex flex-col items-center text-center p-4">
+              <h2 className="text-[40px] md:text-[50px] leading-[1.2] font-bold text-[#1FA9EA] mb-2">with 地球</h2>
+              <p className="text-[18px] md:text-[20px] text-[#333] mb-8">JRAの環境保全活動</p>
+              <Button
+                className="inline-flex items-center justify-center px-8 py-3 rounded-full text-white text-[18px] font-bold shadow-lg"
+                style={{
+                  background: "linear-gradient(87deg, #2EAAE4 0%, #50C4F2 102.59%)",
+                }}
+              >
+                取り組みを見る
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="ml-2"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </Button>
             </div>
           </div>
         </div>
