@@ -10,8 +10,13 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function SocialSustainabilityActionTitleSection() {
   useEffect(() => {
+    // console.log("SocialSustainabilityActionTitleSection useEffect ran.") // Debug: Removed
+
     const textLines = gsap.utils.toArray(".animated-text-line")
     const horseImages = gsap.utils.toArray(".horse-animation")
+
+    // console.log("Found textLines:", textLines) // Debug: Removed
+    // console.log("Found horseImages:", horseImages) // Debug: Removed
 
     // 各ラインのテキストの初期状態を設定 (opacityを1に設定して常に表示)
     gsap.set(textLines, { opacity: 1, y: "0%" })
@@ -23,11 +28,11 @@ export default function SocialSustainabilityActionTitleSection() {
         trigger: ".social-sustainability-title-container",
         start: "top bottom-=20%",
         once: true,
-        // markers: true, // デバッグ用にマーカーを無効化
+        // markers: true, // Debug: Removed
         id: "social-sustainability-title-section-trigger",
-        // onEnter: () => console.log("ScrollTrigger entered!"), // デバッグログを削除
-        // onLeave: () => console.log("ScrollTrigger left!"), // デバッグログを削除
-        // onUpdate: (self) => console.log("ScrollTrigger progress:", self.progress), // デバッグログを削除
+        // onEnter: () => console.log("ScrollTrigger entered!"), // Debug: Removed
+        // onLeave: () => console.log("ScrollTrigger left!"), // Debug: Removed
+        // onUpdate: (self) => console.log("ScrollTrigger progress:", self.progress), // Debug: Removed
       },
     })
 
@@ -47,7 +52,7 @@ export default function SocialSustainabilityActionTitleSection() {
           "--wipe-opacity": 0, // 透明になる
           duration: 0.8,
           ease: "power2.inOut",
-          // onComplete: () => console.log(`Wipe animation for line ${index} completed.`), // デバッグログを削除
+          // onComplete: () => console.log(`Wipe animation for line ${index} completed.`), // Debug: Removed
         },
         0,
       )
@@ -56,34 +61,34 @@ export default function SocialSustainabilityActionTitleSection() {
     })
 
     tl.add(() => {
-      // console.log("Starting horse animation.") // デバッグログを削除
+      // console.log("Starting horse animation.") // Debug: Removed
       gsap.to(".horse-top", {
         opacity: 1, // アニメーションでopacityを1に設定
         x: 150,
         duration: 1,
         ease: "power2.out",
-        // onComplete: () => console.log("Horse top animation completed."), // デバッグログを削除
+        // onComplete: () => console.log("Horse top animation completed."), // Debug: Removed
       })
       gsap.to(".horse-middle", {
         opacity: 1, // アニメーションでopacityを1に設定
         x: 0,
         duration: 1,
         ease: "power2.out",
-        // onComplete: () => console.log("Horse middle animation completed."), // デバッグログを削除
+        // onComplete: () => console.log("Horse middle animation completed."), // Debug: Removed
       })
       gsap.to(".horse-bottom", {
         opacity: 1, // アニメーションでopacityを1に設定
         x: 90,
         duration: 1,
         ease: "power2.out",
-        // onComplete: () => console.log("Horse bottom animation completed."), // デバッグログを削除
+        // onComplete: () => console.log("Horse bottom animation completed."), // Debug: Removed
       })
     }, "+=0.5")
 
     return () => {
       tl.kill()
       ScrollTrigger.getById("social-sustainability-title-section-trigger")?.kill()
-      // console.log("ScrollTrigger and timeline killed on unmount.") // デバッグログを削除
+      // console.log("ScrollTrigger and timeline killed on unmount.") // Debug: Removed
     }
   }, [])
 
