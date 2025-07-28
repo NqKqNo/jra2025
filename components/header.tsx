@@ -80,7 +80,7 @@ export default function Header() {
             企業情報
           </Link>
           <Link href="#" className="bg-[#226600] px-4 py-2 text-white font-bold text-sm mx-2.5" prefetch={false}>
-        　　サステナビリティ
+            サステナビリティ
           </Link>
         </div>
       </nav>
