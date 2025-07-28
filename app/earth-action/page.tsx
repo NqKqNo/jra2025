@@ -1,95 +1,24 @@
-"use client"
-
+"use client" // クライアントコンポーネントとしてマーク
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import EarthActionSection from "@/components/earth-action-section"
-import { useEffect, useRef, useState, useLayoutEffect } from "react"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import EarthMainContentArea from "@/components/earth-main-content-area"
+import EarthInitiativesSection from "@/components/earth-initiatives-section"
+import EarthVideoSection from "@/components/earth-video-section"
+import EarthBannerSection from "@/components/earth-banner-section"
+import EarthSubPageTransitionSection from "@/components/earth-sub-page-transition-section"
+import EarthAdditionalBannerSection from "@/components/earth-additional-banner-section" // 新しいコンポーネントをインポート
 
 export default function EarthActionPage() {
-  const headerRef = useRef<HTMLElement>(null)
-  const [headerHeight, setHeaderHeight] = useState(143) // 推定されるヘッダーの高さ (px)
-  const animationFrameId = useRef<number | null>(null)
-  const currentHeaderHeightRef = useRef(headerHeight) // 最新のheaderHeightを保持するためのref
-  const scrollTriggerRefreshTimeoutId = useRef<NodeJS.Timeout | null>(null) // ScrollTrigger refresh debounce ID
-
-  // headerHeightが変更されるたびにlatestHeaderHeight.currentを更新
-  useEffect(() => {
-    currentHeaderHeightRef.current = headerHeight
-  }, [headerHeight])
-
-  useLayoutEffect(() => {
-    if (!headerRef.current) return
-
-    // 初期高さを設定し、ScrollTriggerをリフレッシュ
-    const initialHeight = headerRef.current.offsetHeight
-    if (initialHeight !== currentHeaderHeightRef.current) {
-      // 初期値と実際の高さが異なる場合のみ更新
-      setHeaderHeight(initialHeight)
-    } else {
-      // 高さが同じでも、初期ロード時にScrollTriggerをリフレッシュ
-      // ここでのrefreshはResizeObserverのループを引き起こす可能性が低い
-      ScrollTrigger.refresh()
-    }
-
-    const observer = new ResizeObserver((entries) => {
-      // 既存のrequestAnimationFrameがあればキャンセルし、新しいものをスケジュール
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current)
-      }
-
-      animationFrameId.current = requestAnimationFrame(() => {
-        if (!entries || entries.length === 0 || !headerRef.current) return
-
-        const newHeight = headerRef.current.offsetHeight // 最新のDOMから高さを再取得
-        // 現在の状態と比較し、変更があった場合のみ更新
-        if (currentHeaderHeightRef.current !== newHeight) {
-          setHeaderHeight(newHeight)
-        }
-        animationFrameId.current = null // 実行後にIDをクリア
-      })
-    })
-
-    observer.observe(headerRef.current)
-
-    return () => {
-      observer.disconnect()
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current)
-      }
-      // コンポーネントアンマウント時にもScrollTriggerをリフレッシュ
-      ScrollTrigger.refresh()
-    }
-  }, []) // 空の依存配列により、マウント時に一度だけ実行
-
-  // headerHeightが変更されるたびにScrollTriggerをリフレッシュ
-  // これにより、headerHeightの変更が確定した後にGSAPがDOMの状態を再計算する
-  useEffect(() => {
-    // ResizeObserver loop completed with undelivered notifications. エラー対策
-    // ScrollTrigger.refresh() を requestAnimationFrame でラップして、
-    // レイアウトの変更が完了した後に実行されるようにする
-    if (scrollTriggerRefreshTimeoutId.current) {
-      clearTimeout(scrollTriggerRefreshTimeoutId.current)
-    }
-    scrollTriggerRefreshTimeoutId.current = setTimeout(() => {
-      ScrollTrigger.refresh()
-      scrollTriggerRefreshTimeoutId.current = null
-    }, 50) // 短い遅延でデバウンス
-
-    return () => {
-      if (scrollTriggerRefreshTimeoutId.current) {
-        clearTimeout(scrollTriggerRefreshTimeoutId.current)
-      }
-    }
-  }, [headerHeight])
-
   return (
-    <>
-      <Header ref={headerRef} />
-      <div style={{ paddingTop: `${headerHeight}px` }}>
-        <EarthActionSection />
-        <Footer />
-      </div>
-    </>
+    <div className="earth-action-page-container flex flex-col min-h-screen">
+      <Header />
+      <EarthMainContentArea />
+      <EarthInitiativesSection />
+      <EarthVideoSection />
+      <EarthBannerSection />
+      <EarthSubPageTransitionSection />
+      <EarthAdditionalBannerSection /> {/* 新しいコンポーネントを使用 */}
+      <Footer />
+    </div>
   )
 }
