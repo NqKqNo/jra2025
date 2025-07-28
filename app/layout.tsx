@@ -1,7 +1,8 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "./new-globals.css" // ここが変更されました
+import "./globals.css" // Import globals.css at the top of the file
+import "./new-globals02.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import LenisSetup from "@/components/lenis-setup"
 
