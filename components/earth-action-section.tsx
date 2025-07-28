@@ -95,6 +95,8 @@ export default function EarthActionSection() {
   }, []) // 依存配列は空で、refは安定しているため
 
   useEffect(() => {
+    if (!sectionRef.current || !rightSidebarRef.current) return
+
     const rightSidebar = rightSidebarRef.current
 
     // 初期レンダリング時にScrollTriggerを設定
@@ -111,9 +113,7 @@ export default function EarthActionSection() {
       })
     })
 
-    if (rightSidebar) {
-      observer.observe(rightSidebar)
-    }
+    observer.observe(rightSidebar)
 
     // コンポーネントアンマウント時のクリーンアップ
     return () => {
@@ -121,9 +121,7 @@ export default function EarthActionSection() {
         scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
         scrollTriggerInstance.current = null // refをクリア
       }
-      if (rightSidebar) {
-        observer.disconnect() // ResizeObserverを解除
-      }
+      observer.disconnect() // ResizeObserverを解除
       if (resizeObserverAnimationFrameId.current) {
         cancelAnimationFrame(resizeObserverAnimationFrameId.current)
       }
@@ -146,11 +144,10 @@ export default function EarthActionSection() {
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/with%E5%9C%B0%E7%90%83_round-xMx3CMWLq5e4VJBzDIfpS96H9uRTEQ.png"
               alt="地球の丸い背景"
-              width={700} // 明示的なwidthを設定
-              height={700} // 明示的なheightを設定
-              objectFit="contain" // アスペクト比を維持しつつ画像をコンテナに収める
+              layout="fill"
+              objectFit="cover"
               priority
-              className="absolute top-0 right-0 z-0" // 右上に配置
+              className="absolute inset-0 z-0"
             />
             <div className="relative z-10 flex flex-col items-center justify-center w-full h-full p-4">
               <Image
