@@ -13,7 +13,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground; /* 元の背景色に戻す */
+    /* 一時的なテスト用背景色: これが適用されればglobals.cssは読み込まれています */
+    background-color: #ff00ff !important; /* 明るいマゼンタ色 */
+    @apply text-foreground;
   }
 
   /* Custom styles for animated text lines */
@@ -21,7 +23,7 @@
     position: relative;
     overflow: hidden; /* ワイプ効果のために必須 */
     display: block; /* 各spanを独立した行にする */
-    z-index: 2; /* 追加: テキストをワイプの上に表示 */
+    z-index: 2; /* テキストをワイプの上に表示 */
     /* GSAPでアニメーションさせるためのCSS変数を定義 */
     --before-left: 0%;
     --before-width: 100%;
@@ -31,7 +33,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    color: transparent !important; /* !important を追加 */
+    color: transparent !important; /* テキスト自体は透明にし、背景グラデーションを適用 */
   }
 
   .animated-text-line::before {
@@ -41,8 +43,9 @@
     left: var(--before-left);
     width: var(--before-width);
     height: 100%;
-    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%); /* 元のグラデーションに戻す */
-    z-index: 1; /* テキストの上に表示されるようにする */
+    /* ワイプの背景色をグラデーションに設定 */
+    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
+    z-index: 1; /* テキストの背後に表示されるようにする (テキストがz-index:2のため) */
   }
 }
 
