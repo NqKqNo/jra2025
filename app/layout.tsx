@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "./new-globals02.css" // ここで`new-globals02.css`のみをインポートするように修正しました
+import "./new-globals02.css" // ここで`new-globals02.css`のみをインポートしています
 import { ThemeProvider } from "@/components/theme-provider"
 import LenisSetup from "@/components/lenis-setup"
 
