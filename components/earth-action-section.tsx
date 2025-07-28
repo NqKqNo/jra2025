@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { useEffect, useRef, useCallback } from "react" // useRef, useCallbackを追加
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button" // 修正されたインポート
 
 export default function EarthActionSection() {
   const sectionRef = useRef(null)
@@ -96,12 +96,7 @@ export default function EarthActionSection() {
   }, []) // 依存配列は空で、refは安定しているため
 
   useEffect(() => {
-    if (!sectionRef.current || !rightSidebarRef.current) return
-
     const rightSidebar = rightSidebarRef.current
-
-    // 初期レンダリング時にScrollTriggerを設定
-    setupScrollTrigger()
 
     // ResizeObserverを設定し、rightSidebarのコンテンツの高さが変更された場合にScrollTriggerをリフレッシュ
     const observer = new ResizeObserver(() => {
@@ -114,7 +109,12 @@ export default function EarthActionSection() {
       })
     })
 
-    observer.observe(rightSidebar)
+    if (rightSidebar) {
+      observer.observe(rightSidebar)
+    }
+
+    // 初期レンダリング時にScrollTriggerを設定
+    setupScrollTrigger()
 
     // コンポーネントアンマウント時のクリーンアップ
     return () => {
@@ -122,7 +122,9 @@ export default function EarthActionSection() {
         scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
         scrollTriggerInstance.current = null // refをクリア
       }
-      observer.disconnect() // ResizeObserverを解除
+      if (rightSidebar) {
+        observer.disconnect() // ResizeObserverを解除
+      }
       if (resizeObserverAnimationFrameId.current) {
         cancelAnimationFrame(resizeObserverAnimationFrameId.current)
       }
@@ -141,35 +143,26 @@ export default function EarthActionSection() {
       <div className="w-full relative z-10 flex flex-col md:flex-row py-10 earth-action-content-container gap-y-0 pl-0 pt-0 pb-0 h-full">
         {/* Left Sidebar "with 地球" section */}
         <div className="left-sidebar-container w-full md:w-[40%] flex justify-center md:justify-start earth-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
-          <div className="relative w-full h-full flex flex-col items-center justify-center earth-action-sidebar-inner-wrapper">
-            {/* Background image */}
+          <div className="relative w-full h-full flex flex-col items-center justify-center p-4 earth-action-sidebar-inner-wrapper px-0 py-0">
+            {/* Background curve image */}
             <Image
               src="/images/with地球_round.png"
-              alt="with 地球 JRAの環境保全活動 背景"
+              alt="Background curve"
               layout="fill"
-              objectFit="contain"
-              priority
-              className="absolute inset-0 w-full h-full"
+              objectFit="cover"
+              className="absolute inset-0 z-0"
             />
 
-            {/* Icon with line */}
-            <Image
-              src="/images/with地球_iconline.png"
-              alt="地球アイコン"
-              width={100}
-              height={100}
-              className="absolute top-[15%] left-[15%] z-20"
-            />
-
-            {/* Text and Button content */}
-            <div className="relative z-10 flex flex-col items-center text-center p-4">
-              <h2 className="text-[40px] md:text-[50px] leading-[1.2] font-bold text-[#1FA9EA] mb-2">with 地球</h2>
-              <p className="text-[18px] md:text-[20px] text-[#333] mb-8">JRAの環境保全活動</p>
+            {/* Content: Title, Subtitle, Button */}
+            <div className="relative z-10 flex flex-col items-center justify-center text-center">
+              <h2 className="text-[48px] md:text-[64px] leading-[1.2] font-bold text-[#1FA9EA] flex items-baseline justify-center">
+                <span className="text-[32px] md:text-[48px] font-normal mr-2">with</span>
+                地球
+              </h2>
+              <p className="text-[18px] md:text-[24px] text-[#1FA9EA] mt-2">JRAの環境保全活動</p>
               <Button
-                className="inline-flex items-center justify-center px-8 py-3 rounded-full text-white text-[18px] font-bold shadow-lg"
-                style={{
-                  background: "linear-gradient(87deg, #2EAAE4 0%, #50C4F2 102.59%)",
-                }}
+                className="mt-8 bg-gradient-to-r from-[#2EAAE4] to-[#50C4F2] text-white rounded-full px-8 py-6 text-[20px] font-bold flex items-center justify-center shadow-lg hover:from-[#50C4F2] hover:to-[#2EAAE4] transition-all duration-300"
+                style={{ minWidth: "280px" }}
               >
                 取り組みを見る
                 <svg
@@ -178,17 +171,22 @@ export default function EarthActionSection() {
                   height="24"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
                   className="ml-2"
                 >
-                  <path d="M5 12h14" />
-                  <path d="m12 5 7 7-7 7" />
+                  <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="white" />
+                  <path d="M11 8L15 12L11 16" stroke="#1FA9EA" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </Button>
             </div>
+
+            {/* Globe icon with line */}
+            <Image
+              src="/images/with地球_iconline.png"
+              alt="Globe icon with line"
+              width={100}
+              height={100}
+              className="absolute bottom-10 right-10 z-20 hidden md:block"
+            />
           </div>
         </div>
 
