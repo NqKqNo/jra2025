@@ -2,20 +2,13 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useCallback } from "react" // useEffectとuseRefをインポート
-import { gsap } from "gsap" // gsapをインポート
 import { ScrollTrigger } from "gsap/ScrollTrigger" // ScrollTriggerをインポート
-import { Button } from "@/components/ui/button" // Buttonをインポート
-
-gsap.registerPlugin(ScrollTrigger) // GSAPプラグインを登録
 
 export default function SocietyActionSection() {
   const sectionRef = useRef(null)
   const rightSidebarRef = useRef(null)
-  const societyIconContainerRef = useRef(null) // 社会アイコン用のref
   const scrollTriggerInstance = useRef<ScrollTrigger | null>(null) // ScrollTriggerインスタンスを保持するref
   const resizeObserverAnimationFrameId = useRef<number | null>(null) // ResizeObserverのrequestAnimationFrame ID
-  const societyAnimationTimeline = useRef<gsap.core.Timeline | null>(null) // 社会アイコンのアニメーションタイムライン
-  const rightSidebarContentAnimationTimeline = useRef<gsap.core.Timeline | null>(null) // 右サイドバーコンテンツのアニメーションタイムライン
 
   // sectionsデータをコンポーネント内に直接定義
   const sections = [
@@ -56,11 +49,10 @@ export default function SocietyActionSection() {
 
   // ScrollTriggerをリフレッシュまたは作成する関数をメモ化
   const setupScrollTrigger = useCallback(() => {
-    if (!sectionRef.current || !rightSidebarRef.current || !societyIconContainerRef.current) return
+    if (!sectionRef.current || !rightSidebarRef.current) return
 
     const section = sectionRef.current
     const rightSidebar = rightSidebarRef.current
-    const societyContainer = societyIconContainerRef.current
 
     if (scrollTriggerInstance.current) {
       // If already exists, just refresh it
@@ -74,14 +66,13 @@ export default function SocietyActionSection() {
         // endを関数にして、rightSidebarのスクロール可能な高さに基づいて動的に計算
         end: () => {
           const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-          // ビューポートの高さとrightSidebarのスクロール可能な高さの大きい方を使用
-          return `+=${Math.max(window.innerHeight, scrollHeight)}`
+          return `+=${scrollHeight}` // rightSidebarのスクロール可能な高さ分だけ固定を継続
         },
         pin: true, // セクションを固定
         scrub: "power3.inOut", // 修正: easeInOutCubicに相当するGSAPイージングを適用
         snap: {
-          snapTo: [0, 1], // 開始時(0)と終了時(1)の両方にスナップ
-          duration: 0.2, // durationを早くしました
+          snapTo: 1,
+          duration: 0.5,
           ease: "power3.inOut",
         },
         onUpdate: (self) => {
@@ -91,76 +82,12 @@ export default function SocietyActionSection() {
         },
         // markers: true, // デバッグ用マーカーを有効化
       })
-
-      // Society icon animation
-      if (societyAnimationTimeline.current) {
-        societyAnimationTimeline.current.kill()
-      }
-      const societyTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom", // Start when section enters viewport from bottom
-          end: "bottom top", // End when section leaves viewport from top
-          scrub: true, // Smoothly scrub animation with scroll
-        },
-      })
-      societyTl
-        .fromTo(
-          societyContainer,
-          {
-            y: "50vh", // Start from 50vh below its natural top-1/2 position
-            x: 100, // Start 100px to the right
-            opacity: 0,
-          },
-          {
-            y: 0, // Move to its natural top-1/2 position
-            x: 0, // Move to its natural right-[-10px] position
-            opacity: 1,
-            ease: "power1.out",
-            duration: 0.5, // This duration is relative to the ScrollTrigger's total scroll distance
-          },
-        )
-        .to(
-          societyContainer,
-          {
-            y: "-150vh", // Move to 150vh above its natural top-1/2 position
-            x: -100, // Move 100px to the left
-            opacity: 0,
-            ease: "power1.in",
-            duration: 0.5, // This duration is relative to the ScrollTrigger's total scroll distance
-          },
-          ">", // Start this animation immediately after the previous one ends
-        )
-      societyAnimationTimeline.current = societyTl // Store the timeline instance
-
-      // Right sidebar content animation
-      if (rightSidebarContentAnimationTimeline.current) {
-        rightSidebarContentAnimationTimeline.current.kill()
-      }
-      const rightSidebarTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom", // Start when section enters viewport from bottom
-          end: "bottom top", // End when section leaves viewport from top
-          scrub: true, // Smoothly scrub animation with scroll
-        },
-      })
-      rightSidebarTl
-        .fromTo(
-          rightSidebar,
-          { y: "100vh", opacity: 1 }, // Start off-screen bottom, opacity 1
-          { y: "50vh", opacity: 1, ease: "power1.out", duration: 0.5 }, // Move to 50vh down from its natural position, opacity 1
-        )
-        .to(
-          rightSidebar,
-          { y: "-100vh", opacity: 1, ease: "power1.in", duration: 0.5 }, // Continue moving up and off-screen top, opacity 1
-          ">", // Start this animation immediately after the previous one ends
-        )
-      rightSidebarContentAnimationTimeline.current = rightSidebarTl // Store the timeline instance
     }
   }, []) // 依存配列は空で、refは安定しているため
 
   useEffect(() => {
+    if (!sectionRef.current || !rightSidebarRef.current) return
+
     const rightSidebar = rightSidebarRef.current
 
     // 初期レンダリング時にScrollTriggerを設定
@@ -177,24 +104,13 @@ export default function SocietyActionSection() {
       })
     })
 
-    if (rightSidebar) {
-      observer.observe(rightSidebar)
-    }
+    observer.observe(rightSidebar)
 
     // コンポーネントアンマウント時のクリーンアップ
     return () => {
       if (scrollTriggerInstance.current) {
         scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
         scrollTriggerInstance.current = null // refをクリア
-      }
-      if (societyAnimationTimeline.current) {
-        societyAnimationTimeline.current.kill()
-        societyAnimationTimeline.current = null
-      }
-      if (rightSidebarContentAnimationTimeline.current) {
-        // 新しいタイムラインのクリーンアップ
-        rightSidebarContentAnimationTimeline.current.kill()
-        rightSidebarContentAnimationTimeline.current = null
       }
       observer.disconnect() // ResizeObserverを解除
       if (resizeObserverAnimationFrameId.current) {
@@ -215,57 +131,13 @@ export default function SocietyActionSection() {
       <div className="w-full relative z-10 flex flex-col md:flex-row py-10 society-action-content-container gap-y-0 pl-0 pt-0 pb-0 h-full">
         {/* Left Sidebar "with 社会" section */}
         <div className="left-sidebar-container w-full md:w-[40%] flex justify-center md:justify-start society-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
-          <div className="relative h-full flex flex-col items-center justify-center p-4 society-action-sidebar-inner-wrapper px-0 py-0 w-[85%]">
-            {/* Background curve image */}
+          <div className="relative w-full h-full flex justify-center p-4 society-action-sidebar-inner-wrapper px-0 py-0 items-start flex-row">
             <Image
-              src="/images/with社会_round.png"
-              alt="Background curve"
+              src="/images/with社会_left.png"
+              alt="with 社会 JRAの社会貢献活動"
               layout="fill"
               objectFit="cover"
-              className="absolute inset-0 z-0 society-action-background-curve"
-            />
-
-            {/* Content: Title, Subtitle, Button */}
-            <div className="relative z-10 flex flex-col items-center justify-center text-center ml-[-65px] society-action-content-wrapper">
-              <h2 className="text-[48px] md:text-[64px] leading-[1.2] font-bold text-[#9E77DD] flex items-baseline justify-center society-action-title">
-                <span className="text-[32px] md:text-[48px] font-semibold leading-normal mr-2 society-action-title-prefix font-noto-sans-jp">
-                  with
-                </span>
-                社会
-              </h2>
-              <p className="text-[16px] text-center font-semibold leading-[28px] text-[#9E77DD] mt-2 society-action-subtitle">
-                JRAの社会貢献活動
-              </p>
-              <Button
-                className="mt-8 bg-gradient-to-r from-[#A279D6] to-[#A598F0] text-white rounded-full px-8 py-6 text-[20px] font-bold flex items-center justify-center shadow-lg hover:from-[#A598F0] hover:to-[#A279D6] transition-all duration-300 society-action-button"
-                style={{ minWidth: "280px" }}
-              >
-                取り組みを見る
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="ml-2 society-action-button-icon"
-                >
-                  <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="white" />
-                  <path d="M11 8L15 12L11 16" stroke="#9E77DD" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </Button>
-            </div>
-          </div>
-          {/* Society icon with line */}
-          <div
-            className="absolute top-1/2 right-[-10px] z-20 hidden md:block society-action-society-icon-container"
-            ref={societyIconContainerRef}
-          >
-            <Image
-              src="/images/with社会_iconline.png"
-              alt="Society icon with line"
-              width={160}
-              height={160}
-              className="society-action-society-icon"
+              priority
             />
           </div>
         </div>
