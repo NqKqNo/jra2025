@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Custom styles for animated text lines */
+  .animated-text-line {
+    position: relative;
+    overflow: hidden; /* ワイプ効果のために必須 */
+    display: block; /* 各spanを独立した行にする */
+    z-index: 2; /* 追加: テキストをワイプの上に表示 */
+    /* GSAPでアニメーションさせるためのCSS変数を定義 */
+    --before-left: 0%;
+    --before-width: 100%;
+
+    /* グラデーション文字色を各spanに直接適用 */
+    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .animated-text-line::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: var(--before-left);
+    width: var(--before-width);
+    height: 100%;
+    background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%); /* 変更: ワイプの色をグラデーションに */
+    z-index: 1; /* テキストの上に表示されるようにする */
+  }
+
+  /* Horizontal scroll section styles */
+  .horizontal_scroll {
+    --sticky-container-height: 100vh; /* JSによって動的に設定されます */
+    height: var(--sticky-container-height);
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
+  .horizontal_scroll .sticky {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  /* Hide native scrollbar for the scroller element */
+  .scroller::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  .scroller {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
