@@ -1,14 +1,12 @@
 "use client" // クライアントコンポーネントとしてマーク
 
 import Image from "next/image"
-import { useEffect, useRef, useCallback } from "react" // useEffectとuseRefをインポート
+import { useEffect, useRef } from "react" // useEffectとuseRefをインポート
 import { ScrollTrigger } from "gsap/ScrollTrigger" // ScrollTriggerをインポート
 
 export default function SocietyActionSection() {
   const sectionRef = useRef(null)
   const rightSidebarRef = useRef(null)
-  const scrollTriggerInstance = useRef<ScrollTrigger | null>(null) // ScrollTriggerインスタンスを保持するref
-  const resizeObserverAnimationFrameId = useRef<number | null>(null) // ResizeObserverのrequestAnimationFrame ID
 
   // sectionsデータをコンポーネント内に直接定義
   const sections = [
@@ -47,28 +45,54 @@ export default function SocietyActionSection() {
     },
   ]
 
-  // ScrollTriggerをリフレッシュまたは作成する関数をメモ化
-  const setupScrollTrigger = useCallback(() => {
+  useEffect(() => {
     if (!sectionRef.current || !rightSidebarRef.current) return
 
     const section = sectionRef.current
     const rightSidebar = rightSidebarRef.current
 
-    if (scrollTriggerInstance.current) {
-      // If already exists, just refresh it
-      scrollTriggerInstance.current.refresh()
-    } else {
-      // Create ScrollTrigger if it doesn't exist
-      scrollTriggerInstance.current = ScrollTrigger.create({
+    // rightSidebarのコンテンツの高さが変更された場合にScrollTriggerを再計算するためのResizeObserver
+    const observer = new ResizeObserver(() => {
+      const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+
+      // 既存のScrollTriggerをキルして重複を防ぐ
+      ScrollTrigger.getById("society-section-pin")?.kill() // IDをユニークに
+
+      if (scrollHeight > 0) {
+        // メインセクションのScrollTriggerを作成
+        ScrollTrigger.create({
+          id: "society-section-pin", // IDをユニークに
+          trigger: section,
+          start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
+          end: "bottom top", // rightSidebarのスクロール可能な高さ分だけ固定を継続 + 50pxのオフセット
+          pin: true, // セクションを固定
+          scrub: "power3.inOut", // 修正: easeInOutCubicに相当するGSAPイージングを適用
+          snap: {
+            snapTo: 1,
+            duration: 0.5,
+            ease: "power3.inOut",
+          },
+          onUpdate: (self) => {
+            // メインスクロールの進行度に応じてrightSidebarのscrollTopを更新
+            rightSidebar.scrollTop = self.progress * scrollHeight
+          },
+          markers: true, // デバッグ用マーカーを有効化
+        })
+      }
+    })
+
+    // rightSidebarのサイズ変更を監視
+    observer.observe(rightSidebar)
+
+    // 初期レンダリング時のScrollTrigger設定
+    const initialScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+    if (initialScrollHeight > 0) {
+      ScrollTrigger.create({
         id: "society-section-pin", // IDをユニークに
         trigger: section,
-        start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-        // endを関数にして、rightSidebarのスクロール可能な高さに基づいて動的に計算
-        end: () => {
-          const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-          return `+=${scrollHeight}` // rightSidebarのスクロール可能な高さ分だけ固定を継続
-        },
-        pin: true, // セクションを固定
+        start: "top top",
+        end: "bottom top", // + 50pxのオフセット
+        pin: true,
         scrub: "power3.inOut", // 修正: easeInOutCubicに相当するGSAPイージングを適用
         snap: {
           snapTo: 1,
@@ -76,48 +100,18 @@ export default function SocietyActionSection() {
           ease: "power3.inOut",
         },
         onUpdate: (self) => {
-          // メインスクロールの進行度に応じてrightSidebarのscrollTopを更新
-          const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-          rightSidebar.scrollTop = self.progress * currentScrollHeight
+          rightSidebar.scrollTop = self.progress * initialScrollHeight
         },
         markers: true, // デバッグ用マーカーを有効化
       })
     }
-  }, []) // 依存配列は空で、refは安定しているため
-
-  useEffect(() => {
-    if (!sectionRef.current || !rightSidebarRef.current) return
-
-    const rightSidebar = rightSidebarRef.current
-
-    // 初期レンダリング時にScrollTriggerを設定
-    setupScrollTrigger()
-
-    // ResizeObserverを設定し、rightSidebarのコンテンツの高さが変更された場合にScrollTriggerをリフレッシュ
-    const observer = new ResizeObserver(() => {
-      if (resizeObserverAnimationFrameId.current) {
-        cancelAnimationFrame(resizeObserverAnimationFrameId.current)
-      }
-      resizeObserverAnimationFrameId.current = requestAnimationFrame(() => {
-        setupScrollTrigger() // ScrollTriggerをリフレッシュ
-        resizeObserverAnimationFrameId.current = null
-      })
-    })
-
-    observer.observe(rightSidebar)
 
     // コンポーネントアンマウント時のクリーンアップ
     return () => {
-      if (scrollTriggerInstance.current) {
-        scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
-        scrollTriggerInstance.current = null // refをクリア
-      }
+      ScrollTrigger.getById("society-section-pin")?.kill() // このセクションのScrollTriggerをキル
       observer.disconnect() // ResizeObserverを解除
-      if (resizeObserverAnimationFrameId.current) {
-        cancelAnimationFrame(resizeObserverAnimationFrameId.current)
-      }
     }
-  }, [setupScrollTrigger]) // setupScrollTriggerを依存配列に追加
+  }, []) // 空の依存配列により、マウント時に一度だけ実行
 
   return (
     <section
