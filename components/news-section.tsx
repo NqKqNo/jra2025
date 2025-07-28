@@ -34,8 +34,8 @@ export default function NewsSection() {
         style={{
           width: "1000px", // サイズを1/2に
           height: "1000px", // サイズを1/2に
-          top: "-200px", // 位置を調整
-          left: "-200px", // 位置を左上に調整
+          top: "-500px", // 位置を調整
+          left: "-500px", // 位置を左上に調整
           background: "radial-gradient(50% 50% at 50% 50%, rgba(0, 170, 67, 0.10) 0%, rgba(0, 170, 67, 0.03) 100%)",
           filter: "blur(100px)",
         }}
@@ -85,7 +85,7 @@ export default function NewsSection() {
             </div>
           ))}
         </div>
-        {/* 端の緑色の線 */}
+        {/* ��端の緑色の線 */}
       </div>
     </section>
   )
