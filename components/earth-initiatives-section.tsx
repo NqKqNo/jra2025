@@ -153,10 +153,8 @@ export default function EarthInitiativesSection() {
             type: "custom", // imageからcustomに変更
             content: (
               <div className="flex flex-col items-start p-2 text-left w-full px-0 py-0">
-                <h5 className="text-[#2EAAE4] text-base font-bold mb-2">雨水の循環型有効活用</h5>
-                <p className="text-[#333] text-sm mb-8">
-                  競馬場の芝生コースや馬場散水には、地下水や水道水だけでなく、雨水を活用しています。雨水は、場内の貯水池に貯められ、ろ過・消毒処理を経てから散水に使用しています。
-                </p>
+                <h5 className="text-[#2EAAE4] text-base font-bold mb-2">水源の節約量</h5>
+                
                 <div className="w-full flex justify-center bg-transparent rounded-md py-0 mb-0 relative pt-[calc(100/250*100%)]">
                   <Image
                     src="/images/雨水の循環型有効活用_illust.png"
