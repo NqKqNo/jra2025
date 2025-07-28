@@ -37,7 +37,6 @@ export default function EarthInitiativesSection() {
               </div>
             ),
           },
-        },
         {
           image: "/images/バイオマス燃焼発電プラントの導入.png",
           alt: "バイオマス発電プラント",
@@ -62,7 +61,6 @@ export default function EarthInitiativesSection() {
               </div>
             ),
           },
-        },
         {
           image: "/images/エネルギーコントロールのための監視システム.png",
           alt: "監視システム",
@@ -118,7 +116,6 @@ export default function EarthInitiativesSection() {
               </div>
             ),
           },
-        },
         {
           image: "/images/調教用ゼッケンをさらにリサイクル.png",
           alt: "リサイクルゼッケン",
@@ -143,7 +140,6 @@ export default function EarthInitiativesSection() {
               </div>
             ),
           },
-        },
         {
           image: "/images/雨水の循環型有効活用.png",
           alt: "雨水利用",
