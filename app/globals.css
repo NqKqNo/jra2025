@@ -94,7 +94,7 @@
   overflow: hidden; /* ワイプ効果のために必須 */
   display: block; /* 各spanを独立した行にする */
   z-index: 2; /* テキストをワイプの上に表示 */
-  background: linear-gradient(214deg, #268301 -3.55%, #00AA43 48.69%, #009EA7 100.93%);
+  background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -106,7 +106,7 @@
   /* leftとwidthのCSS変数を削除 */
   width: 100%; /* 初期幅を100%に設定 */
   height: 100%;
-  background: linear-gradient(214deg, #268301 -3.55%, #00AA43 48.69%, #009EA7 100.93%);
+  background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
   z-index: 1;
   /* GSAPでアニメーションさせるためのCSS変数を定義 */
   transform: translateX(var(--wipe-x, 0%)); /* 新しいCSS変数と初期値 */
