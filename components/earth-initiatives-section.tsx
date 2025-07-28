@@ -96,7 +96,7 @@ export default function EarthInitiativesSection() {
           image: "/images/ペットボトルを調教用ゼッケンへ.png",
           alt: "ペットボトル",
           title: "ペットボトルを調教用ゼッケンへ",
-          text: "競馬場では、スタンドで排出されたペットボトルを回収・再資源化し、競走馬が着用する調教用ゼッケンの材料として再利用しています。",
+          text: "競馬場やウインズにおいては、日々大量のペットボトルがごみとして排出されています。その中で、中山競馬場では回収したペットボトルの一部を繊維化（再生ポリエステル綿）し、調教に用いるゼッケンの材料布としてリサイクルしています。「競馬の中で完全循環リサイクル」というJRAならではの取組みです。",
           illustration: {
             type: "custom", // imageからcustomに変更
             content: (
@@ -120,7 +120,7 @@ export default function EarthInitiativesSection() {
           image: "/images/調教用ゼッケンをさらにリサイクル.png",
           alt: "リサイクルゼッケン",
           title: "調教用ゼッケンをさらにリサイクル",
-          text: "調教用ゼッケンは破損すると廃棄していましたが、リサイクル可能な素材に転換し、再資源化の取り組みを開始しました。",
+          text: "JRA美浦トレーニング・センターで実際に使用された調教用ゼッケンを、茨城県内の障害者支援施設で洗浄し、職人が一つひとつ手造りをして販売。売上の一部は、茨城県内の障害者福祉団体及び支援施設に寄付されています。",
           illustration: {
             type: "custom", // imageからcustomに変更
             content: (
@@ -142,7 +142,7 @@ export default function EarthInitiativesSection() {
           image: "/images/雨水の循環型有効活用.png",
           alt: "雨水利用",
           title: "雨水の循環型有効活用",
-          text: "競馬場の芝生コースや馬場散水には、地下水や水道水だけでなく、雨水を活用しています。雨水は、場内の貯水池に貯められ、ろ過・消毒処理を経てから散水に使用しています。",
+          text: "広大な敷地を持つJRAならではの資源循環型取組みとして、スタンドに降った雨水を一度地下の水槽に貯蔵し、コース管理に使用する馬場散水やスタンドトイレの洗浄水として再利用を行っています。",
           illustration: {
             type: "custom", // imageからcustomに変更
             content: (
