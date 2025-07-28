@@ -144,11 +144,13 @@ export default function EarthInitiativesSection() {
           title: "雨水の循環型有効活用",
           text: "広大な敷地を持つJRAならではの資源循環型取組みとして、スタンドに降った雨水を一度地下の水槽に貯蔵し、コース管理に使用する馬場散水やスタンドトイレの洗浄水として再利用を行っています。",
           illustration: {
-            type: "custom", // imageからcustomに変更
+            type: "custom",
             content: (
               <div className="flex flex-col items-start p-2 text-left w-full px-0 py-0">
                 <h5 className="text-[#2EAAE4] text-base font-bold mb-2">水源の節約量</h5>
-                
+                <p className="text-[#333] text-sm mb-8">
+                  {'年間 約 70,000L の水源を節約'}
+                </p>
                 <div className="w-full flex justify-center bg-transparent rounded-md py-0 mb-0 relative pt-[calc(100/250*100%)]">
                   <Image
                     src="/images/雨水の循環型有効活用_illust.png"
