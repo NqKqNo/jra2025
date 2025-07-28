@@ -8,17 +8,17 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function AccessPage() {
+export default function PasswordProtectedPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (password === "jra2025") {
-      router.push("/")
+      router.push("/") // ホームページにリダイレクト
     } else {
-      setError("Incorrect password. Please try again.")
+      setError("パスワードが正しくありません。もう一度お試しください。")
     }
   }
 
@@ -29,25 +29,22 @@ export default function AccessPage() {
           <CardTitle className="text-2xl">アクセスが必要です</CardTitle>
         </CardHeader>
         <CardContent>
+          <p className="mb-4 text-center text-gray-600">このページにアクセスするにはパスワードを入力してください。</p>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="password" className="sr-only">
-                パスワード
-              </label>
               <Input
                 id="password"
                 type="password"
-                placeholder="パスワードを入力してください"
+                placeholder="パスワードを入力"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value)
                   setError("") // 入力変更時にエラーをクリア
                 }}
                 required
-                className="w-full"
               />
             </div>
-            {error && <p className="text-sm text-red-500">{error}</p>}
+            {error && <p className="text-center text-red-500">{error}</p>}
             <Button type="submit" className="w-full">
               送信
             </Button>
