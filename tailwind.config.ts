@@ -53,6 +53,16 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Custom colors for specific sections and elements
+        "light-blue": "var(--light-blue)",
+        "dark-blue": "var(--dark-blue)",
+        "medium-blue": "var(--medium-blue)",
+        "jra-green": "var(--jra-green)",
+        "news-bg-alpha": "var(--news-bg-alpha)",
+        "news-date-color": "var(--news-date-color)",
+      },
+      boxShadow: {
+        "news-card": "var(--news-card-shadow)", // Custom shadow for news card
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -75,9 +85,6 @@ const config = {
       },
       fontFamily: {
         "noto-sans-jp": ["Noto Sans JP", "sans-serif"],
-        // Gantari フォントはGoogle Fontsなどからインポートする必要があります。
-        // ここでは仮にNoto Sans JPを使用しています。
-        // 'gantari': ['Gantari', 'sans-serif'],
       },
     },
   },
