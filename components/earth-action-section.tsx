@@ -2,13 +2,20 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useCallback } from "react" // useRef, useCallbackを追加
+import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Button } from "@/components/ui/button" // 修正されたインポート
+
+gsap.registerPlugin(ScrollTrigger)
 
 export default function EarthActionSection() {
   const sectionRef = useRef(null)
   const rightSidebarRef = useRef(null)
+  const globeIconContainerRef = useRef(null)
   const scrollTriggerInstance = useRef<ScrollTrigger | null>(null) // ScrollTriggerインスタンスを保持するref
   const resizeObserverAnimationFrameId = useRef<number | null>(null) // ResizeObserverのrequestAnimationFrame ID
+  const globeAnimationTimeline = useRef<gsap.core.Timeline | null>(null)
+  const rightSidebarContentAnimationTimeline = useRef<gsap.core.Timeline | null>(null) // 右サイドバーコンテンツのアニメーションタイムライン
 
   // sectionsデータをコンポーネント内に直接定義
   const sections = [
@@ -58,10 +65,11 @@ export default function EarthActionSection() {
 
   // ScrollTriggerをリフレッシュまたは作成する関数をメモ化
   const setupScrollTrigger = useCallback(() => {
-    if (!sectionRef.current || !rightSidebarRef.current) return
+    if (!sectionRef.current || !rightSidebarRef.current || !globeIconContainerRef.current) return
 
     const section = sectionRef.current
     const rightSidebar = rightSidebarRef.current
+    const globeContainer = globeIconContainerRef.current
 
     if (scrollTriggerInstance.current) {
       // If already exists, just refresh it
@@ -75,13 +83,14 @@ export default function EarthActionSection() {
         // endを関数にして、rightSidebarのスクロール可能な高さに基づいて動的に計算
         end: () => {
           const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-          return `+=${scrollHeight}` // rightSidebarのスクロール可能な高さ分だけ固定を継続
+          // ビューポートの高さとrightSidebarのスクロール可能な高さの大きい方を使用
+          return `+=${Math.max(window.innerHeight, scrollHeight)}`
         },
         pin: true, // セクションを固定
         scrub: "power3.inOut", // これがイージングを制御する設定です
         snap: {
-          snapTo: 1,
-          duration: 0.5,
+          snapTo: [0, 1], // 開始時(0)と終了時(1)の両方にスナップ
+          duration: 0.2, // durationを早くしました
           ease: "power3.inOut",
         },
         onUpdate: (self) => {
@@ -91,16 +100,78 @@ export default function EarthActionSection() {
           rightSidebar.scrollTop = self.progress * currentScrollHeight
         },
       })
+
+      // Globe icon animation
+      if (globeAnimationTimeline.current) {
+        globeAnimationTimeline.current.kill()
+      }
+      const globeTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top bottom", // Start when section enters viewport from bottom
+          end: "bottom top", // End when section leaves viewport from top
+          scrub: true, // Smoothly scrub animation with scroll
+          // markers: true, // Uncomment for debugging scroll trigger positions
+        },
+      })
+      globeTl
+        .fromTo(
+          globeContainer,
+          {
+            y: "50vh", // Start from 50vh below its natural top-1/2 position
+            x: 100, // Start 100px to the right
+            opacity: 0,
+          },
+          {
+            y: 0, // Move to its natural top-1/2 position
+            x: 0, // Move to its natural right-[-10px] position
+            opacity: 1,
+            ease: "power1.out",
+            duration: 0.5, // This duration is relative to the ScrollTrigger's total scroll distance
+          },
+        )
+        .to(
+          globeContainer,
+          {
+            y: "-150vh", // Move to 150vh above its natural top-1/2 position
+            x: -100, // Move 100px to the left
+            opacity: 0,
+            ease: "power1.in",
+            duration: 0.5, // This duration is relative to the ScrollTrigger's total scroll distance
+          },
+          ">", // Start this animation immediately after the previous one ends
+        )
+      globeAnimationTimeline.current = globeTl // Store the timeline instance
+
+      // Right sidebar content animation
+      if (rightSidebarContentAnimationTimeline.current) {
+        rightSidebarContentAnimationTimeline.current.kill()
+      }
+      const rightSidebarTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top bottom", // Start when section enters viewport from bottom
+          end: "bottom top", // End when section leaves viewport from top
+          scrub: true, // Smoothly scrub animation with scroll
+        },
+      })
+      rightSidebarTl
+        .fromTo(
+          rightSidebar,
+          { y: "100vh", opacity: 1 }, // Start off-screen bottom, opacity 1
+          { y: "50vh", opacity: 1, ease: "power1.out", duration: 0.5 }, // Move to 50vh down from its natural position, opacity 1
+        )
+        .to(
+          rightSidebar,
+          { y: "-100vh", opacity: 1, ease: "power1.in", duration: 0.5 }, // Continue moving up and off-screen top, opacity 1
+          ">", // Start this animation immediately after the previous one ends
+        )
+      rightSidebarContentAnimationTimeline.current = rightSidebarTl // Store the timeline instance
     }
   }, []) // 依存配列は空で、refは安定しているため
 
   useEffect(() => {
-    if (!sectionRef.current || !rightSidebarRef.current) return
-
     const rightSidebar = rightSidebarRef.current
-
-    // 初期レンダリング時にScrollTriggerを設定
-    setupScrollTrigger()
 
     // ResizeObserverを設定し、rightSidebarのコンテンツの高さが変更された場合にScrollTriggerをリフレッシュ
     const observer = new ResizeObserver(() => {
@@ -113,7 +184,12 @@ export default function EarthActionSection() {
       })
     })
 
-    observer.observe(rightSidebar)
+    if (rightSidebar) {
+      observer.observe(rightSidebar)
+    }
+
+    // 初期レンダリング時にScrollTriggerを設定
+    setupScrollTrigger()
 
     // コンポーネントアンマウント時のクリーンアップ
     return () => {
@@ -121,7 +197,18 @@ export default function EarthActionSection() {
         scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
         scrollTriggerInstance.current = null // refをクリア
       }
-      observer.disconnect() // ResizeObserverを解除
+      if (globeAnimationTimeline.current) {
+        globeAnimationTimeline.current.kill()
+        globeAnimationTimeline.current = null
+      }
+      if (rightSidebarContentAnimationTimeline.current) {
+        // 新しいタイムラインのクリーンアップ
+        rightSidebarContentAnimationTimeline.current.kill()
+        rightSidebarContentAnimationTimeline.current = null
+      }
+      if (rightSidebar) {
+        observer.disconnect() // ResizeObserverを解除
+      }
       if (resizeObserverAnimationFrameId.current) {
         cancelAnimationFrame(resizeObserverAnimationFrameId.current)
       }
@@ -140,13 +227,57 @@ export default function EarthActionSection() {
       <div className="w-full relative z-10 flex flex-col md:flex-row py-10 earth-action-content-container gap-y-0 pl-0 pt-0 pb-0 h-full">
         {/* Left Sidebar "with 地球" section */}
         <div className="left-sidebar-container w-full md:w-[40%] flex justify-center md:justify-start earth-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
-          <div className="relative w-full h-full flex p-4 earth-action-sidebar-inner-wrapper px-0 py-0 items-start flex-row">
+          <div className="relative h-full flex flex-col items-center justify-center p-4 earth-action-sidebar-inner-wrapper px-0 py-0 w-[85%]">
+            {/* Background curve image */}
             <Image
-              src="/images/with地球_left.png"
-              alt="with 地球 JRAの環境保全活動"
+              src="/images/with地球_round.png"
+              alt="Background curve"
               layout="fill"
               objectFit="cover"
-              priority
+              className="absolute inset-0 z-0 earth-action-background-curve"
+            />
+
+            {/* Content: Title, Subtitle, Button */}
+            <div className="relative z-10 flex flex-col items-center justify-center text-center ml-[-65px] earth-action-content-wrapper">
+              <h2 className="text-[48px] md:text-[64px] leading-[1.2] font-bold text-[#1FA9EA] flex items-baseline justify-center earth-action-title">
+                <span className="text-[32px] md:text-[48px] font-semibold leading-normal mr-2 earth-action-title-prefix font-noto-sans-jp">
+                  with
+                </span>
+                地球
+              </h2>
+              <p className="text-[16px] text-center font-semibold leading-[28px] text-[#1FA9EA] mt-2 earth-action-subtitle">
+                JRAの環境保全活動
+              </p>
+              <Button
+                className="mt-8 bg-gradient-to-r from-[#2EAAE4] to-[#50C4F2] text-white rounded-full px-8 py-6 text-[20px] font-bold flex items-center justify-center shadow-lg hover:from-[#50C4F2] hover:to-[#2EAAE4] transition-all duration-300 earth-action-button"
+                style={{ minWidth: "280px" }}
+              >
+                取り組みを見る
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="ml-2 earth-action-button-icon"
+                >
+                  <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="white" />
+                  <path d="M11 8L15 12L11 16" stroke="#1FA9EA" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </Button>
+            </div>
+          </div>
+          {/* Globe icon with line */}
+          <div
+            className="absolute top-1/2 right-[-10px] z-20 hidden md:block earth-action-globe-icon-container"
+            ref={globeIconContainerRef}
+          >
+            <Image
+              src="/images/with地球_iconline.png"
+              alt="Globe icon with line"
+              width={160}
+              height={160}
+              className="earth-action-globe-icon"
             />
           </div>
         </div>
