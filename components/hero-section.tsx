@@ -79,7 +79,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
       {/* MVセクション画面中央にロゴを追加 */}
 
       {/* アニメーションを追加するdiv - 親コンテナはレイアウトのみを担当 */}
-      <div className="mv-action-links relative z-20 flex flex-col md:flex-row gap-4 md:gap-4 mt-auto mb-0 md:mb-[50px]">
+      <div className="mv-action-links relative z-20 flex flex-col md:flex-row gap-4 md:gap-4 mt-auto mb-0 md:mb-4">
         {" "}
         {/* z-indexをz-20に変更 */}
         {/* with 地球 */}
@@ -155,8 +155,9 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
       <Image
         src="/images/mv-bottom-curve.png"
         alt="Bottom Curve"
-        layout="fill"
-        objectFit="cover"
+        width={1920} // 元画像の幅
+        height={300} // 元画像の高さ
+        layout="responsive" // width:100%; height:auto; に相当
         className={`mv-bottom-curve absolute bottom-0 left-0 w-full z-10 transition-opacity duration-1000 ease-out ${
           showMvBottomCurve ? "opacity-100" : "opacity-0"
         }`}
