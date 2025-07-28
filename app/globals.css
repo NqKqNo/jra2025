@@ -13,7 +13,7 @@
     @apply border-border;
   }
   body {
-    /* 一時的なテスト用背景色: これが適用されればglobals.cssは読み込まれています */
+    /* テスト用背景色: これが適用されればglobals.cssは読み込まれています */
     background-color: #ff00ff !important; /* 明るいマゼンタ色 */
     @apply text-foreground;
   }
