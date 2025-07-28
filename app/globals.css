@@ -85,6 +85,49 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground min-h-svh;
   }
+}
+
+.animated-text-line {
+  position: relative;
+  overflow: hidden; /* ワイプ効果のために必須 */
+  display: block; /* 各spanを独立した行にする */
+  z-index: 2; /* テキストをワイプの上に表示 */
+  background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.animated-text-line::before {
+  content: "" !important; /* contentプロパティは必須 */
+  position: absolute;
+  top: 0;
+  /* leftとwidthのCSS変数を削除 */
+  width: 100%; /* 初期幅を100%に設定 */
+  height: 100%;
+  background: linear-gradient(214deg, #268301 -3.55%, #00aa43 48.69%, #009ea7 100.93%);
+  z-index: 1;
+  /* GSAPでアニメーションさせるためのCSS変数を定義 */
+  transform: translateX(var(--wipe-x, 0%)); /* 新しいCSS変数と初期値 */
+  opacity: var(--wipe-opacity, 1); /* 新しいCSS変数と初期値 */
+}
+
+/* Custom scrollbar for news section */
+.custom-news-scrollbar::-webkit-scrollbar {
+  width: 4px; /* スクロールバーの幅 */
+}
+
+.custom-news-scrollbar::-webkit-scrollbar-track {
+  background: #e2e4e2; /* トラックの色 */
+  border-radius: 2px; /* トラックの角を丸くする */
+}
+
+.custom-news-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #00aa43; /* サムの色 */
+  border-radius: 2px; /* サムの角を丸くする */
+}
+
+.custom-news-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #008833; /* ホバー時のサムの色 */
 }
