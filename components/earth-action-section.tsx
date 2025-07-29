@@ -8,7 +8,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 export default function EarthActionSection() {
   const sectionRef = useRef(null)
   const rightSidebarRef = useRef(null)
-  const innerContentRef = useRef(null) // アニメーション対象のコンテンツ用ref
   const scrollTriggerInstance = useRef<ScrollTrigger | null>(null) // ScrollTriggerインスタンスを保持するref
   const resizeObserverAnimationFrameId = useRef<number | null>(null) // ResizeObserverのrequestAnimationFrame ID
 
@@ -60,63 +59,69 @@ export default function EarthActionSection() {
 
   // ScrollTriggerをリフレッシュまたは作成する関数をメモ化
   const setupScrollTrigger = useCallback(() => {
-    if (!sectionRef.current || !rightSidebarRef.current || !innerContentRef.current) return
+    if (!sectionRef.current || !rightSidebarRef.current) return
 
     const section = sectionRef.current
     const rightSidebar = rightSidebarRef.current
-    const innerContent = innerContentRef.current
 
     // 既存のScrollTriggerインスタンスをキルしてクリーンアップ
     if (scrollTriggerInstance.current) {
-      scrollTriggerInstance.current.kill()
-      scrollTriggerInstance.current = null
+      scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
+      scrollTriggerInstance.current = null // refをクリア
     }
-    // innerContentに対する既存のTweenもキルして競合を防ぐ
-    gsap.killTweensOf(innerContent)
+
+    gsap.killTweensOf(rightSidebar) // 右サイドバーの既存のアニメーションを全て停止
+
+    // 初期位置を画面下部に設定
+    gsap.set(rightSidebar, { y: "100vh" })
 
     // ScrollTriggerを登録 (一度だけ実行されるように)
     gsap.registerPlugin(ScrollTrigger)
 
-    // innerContentの初期位置を画面下部に設定
-    gsap.set(innerContent, { y: "100vh" })
-
-    // アニメーション用のタイムラインを作成
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        id: "earth-section-pin-and-scroll", // IDを付与して管理しやすくする
-        trigger: section,
-        start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-        end: "300vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
-        pin: true, // セクションを固定
-        scrub: true, // これがイージングを制御する設定です
-        snap: {
-          snapTo: [0, 1], // スナップポイントを0（開始）と1（終了）に設定
-          duration: 0.2, // スナップアニメーションの持続時間
-          ease: "power3.inOut", // スナップアニメーションのイージング
-        },
-        onLeave: () => {
-          // トリガー領域を離れる際にアニメーションが完了するようにする
-          gsap.to(innerContent, { y: "-100vh", duration: 0.5, ease: "power3.out" })
-        },
-        onEnterBack: () => {
-          // 下から再入場する際にアニメーションが正しく開始するようにする
-          gsap.set(innerContent, { y: "100vh" })
-        },
+    // メインのScrollTrigger（セクションのピン留めを制御）
+    scrollTriggerInstance.current = ScrollTrigger.create({
+      id: "earth-section-pin", // IDを付与して管理しやすくする
+      trigger: section,
+      start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
+      end: "300vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
+      pin: true, // セクションを固定
+      scrub: true, // スクロール位置とアニメーションの進行度を滑らかに連動
+      snap: {
+        snapTo: [0, 1], // スナップポイントを0（開始）と1（終了）に設定
+        duration: 0.2, // スナップアニメーションの持続時間
+        ease: "power3.inOut", // スナップアニメーションのイージング
       },
+      // onUpdateを削除またはコメントアウト。yアニメーションがスクロールを制御するため
+      // onUpdate: (self) => {
+      //   const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+      //   rightSidebar.scrollTop = self.progress * currentScrollHeight
+      // },
     })
 
-    // yアニメーションをタイムラインに追加
-    tl.to(innerContent, {
-      y: "-100vh", // 100vh (初期設定) から -100vh へアニメーション
-      ease: "none", // 一貫したスクロールのために線形移動
-    })
-
-    // ScrollTriggerインスタンスを保存
-    scrollTriggerInstance.current = tl.scrollTrigger
+    // rightSidebarのy位置をアニメーションさせるタイムライン
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "300vh",
+          scrub: true,
+        },
+      })
+      .to(rightSidebar, {
+        y: "50vh", // スクロール中間点でyを50vhに
+        ease: "power3.inOut",
+        duration: 0.5, // タイムラインの相対的な期間
+      })
+      .to(rightSidebar, {
+        y: "-100vh", // スクロール終了時点でyを-100vhに
+        ease: "power3.inOut",
+        duration: 0.5, // タイムラインの相対的な期間
+      })
   }, []) // 依存配列は空で、refは安定しているため
 
   useEffect(() => {
-    if (!sectionRef.current || !rightSidebarRef.current || !innerContentRef.current) return
+    if (!sectionRef.current || !rightSidebarRef.current) return
 
     const rightSidebar = rightSidebarRef.current
 
@@ -175,79 +180,77 @@ export default function EarthActionSection() {
         {/* Right content area */}
         <div
           ref={rightSidebarRef} // rightSidebarRefをアタッチ
-          className="right-sidebar-container w-full md:w-[60%] mt-10 md:mt-0 earth-action-main-content-area flex flex-col mr-0 ml-[40%] h-full" // overflow-y-autoを削除
+          className="right-sidebar-container w-full md:w-[60%] mt-10 md:mt-0 earth-action-main-content-area flex flex-col gap-[60px] px-5 mr-0 ml-[40%] h-full overflow-hidden justify-center py-5" // overflow-y-autoをoverflow-hiddenに変更
         >
-          <div ref={innerContentRef} className="flex flex-col gap-[60px] px-5 py-5">
-            {sections.map((section) => (
-              <div key={section.id} className="earth-action-section-group">
-                <div className="flex items-center mb-6 px-4 md:px-0 earth-action-section-header">
-                  <div
-                    className="w-[88px] h-[52px] flex-shrink-0 rounded-[26px] border border-[#97C6DC] bg-[#F1F6F6] text-[#1FA9EA] flex items-center justify-center text-[30px] leading-[20px] font-light earth-action-section-number-circle"
-                    style={{
-                      boxShadow: "5px 5px 10px 0px #FFF, -3px -3px 5px 0px rgba(0, 0, 0, 0.10)",
-                    }}
-                  >
-                    {section.id}
-                  </div>
-                  <h3
-                    className="text-[28px] leading-[32px] ml-4 earth-action-section-title font-semibold"
-                    style={{
-                      background: "linear-gradient(87deg, #2EAAE4 0%, #50C4F2 102.59%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    {section.title}
-                  </h3>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className="ml-2 earth-action-section-arrow-icon"
-                    style={{ transform: "rotate(0deg)", aspectRatio: "1/1" }}
-                  >
-                    <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="#1FA9EA" />
-                    <path d="M11 8L15 12L11 16" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
+          {sections.map((section) => (
+            <div key={section.id} className="earth-action-section-group">
+              <div className="flex items-center mb-6 px-4 md:px-0 earth-action-section-header">
+                <div
+                  className="w-[88px] h-[52px] flex-shrink-0 rounded-[26px] border border-[#97C6DC] bg-[#F1F6F6] text-[#1FA9EA] flex items-center justify-center text-[30px] leading-[20px] font-light earth-action-section-number-circle"
+                  style={{
+                    boxShadow: "5px 5px 10px 0px #FFF, -3px -3px 5px 0px rgba(0, 0, 0, 0.10)",
+                  }}
+                >
+                  {section.id}
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-0 earth-action-cards-grid">
-                  {section.items.map((item, itemIndex) =>
-                    item.isEmpty ? (
-                      <div key={itemIndex} className="hidden lg:block"></div> // Empty div for layout in desktop
-                    ) : (
-                      <div
-                        key={itemIndex}
-                        className="rounded-[10px] p-4 flex flex-col items-center text-center overflow-hidden pt-0 pl-0 pr-0 earth-action-card pb-0"
-                        style={{
-                          background: "rgba(241, 241, 241, 0.60)",
-                          boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
-                        }}
-                      >
-                        <div
-                          className="w-full pb-[66.66%] relative overflow-hidden earth-action-card-image-wrapper mb-0"
-                          style={{ borderRadius: "10px 10px 0px 0px" }}
-                        >
-                          <Image
-                            src={item.image || "/placeholder.svg"}
-                            alt={item.alt}
-                            layout="fill"
-                            objectFit="cover"
-                            className=""
-                          />
-                        </div>
-                        <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed earth-action-card-text px-6 mt-6 mb-6 text-left">
-                          {item.text}
-                        </p>
-                      </div>
-                    ),
-                  )}
-                </div>
+                <h3
+                  className="text-[28px] leading-[32px] ml-4 earth-action-section-title font-semibold"
+                  style={{
+                    background: "linear-gradient(87deg, #2EAAE4 0%, #50C4F2 102.59%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  {section.title}
+                </h3>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="ml-2 earth-action-section-arrow-icon"
+                  style={{ transform: "rotate(0deg)", aspectRatio: "1/1" }}
+                >
+                  <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="#1FA9EA" />
+                  <path d="M11 8L15 12L11 16" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                </svg>
               </div>
-            ))}
-          </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-0 earth-action-cards-grid">
+                {section.items.map((item, itemIndex) =>
+                  item.isEmpty ? (
+                    <div key={itemIndex} className="hidden lg:block"></div> // Empty div for layout in desktop
+                  ) : (
+                    <div
+                      key={itemIndex}
+                      className="rounded-[10px] p-4 flex flex-col items-center text-center overflow-hidden pt-0 pl-0 pr-0 earth-action-card pb-0"
+                      style={{
+                        background: "rgba(241, 241, 241, 0.60)",
+                        boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
+                      }}
+                    >
+                      <div
+                        className="w-full pb-[66.66%] relative overflow-hidden earth-action-card-image-wrapper mb-0"
+                        style={{ borderRadius: "10px 10px 0px 0px" }}
+                      >
+                        <Image
+                          src={item.image || "/placeholder.svg"}
+                          alt={item.alt}
+                          layout="fill"
+                          objectFit="cover"
+                          className=""
+                        />
+                      </div>
+                      <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed earth-action-card-text px-6 mt-6 mb-6 text-left">
+                        {item.text}
+                      </p>
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

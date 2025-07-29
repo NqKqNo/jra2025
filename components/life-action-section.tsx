@@ -8,7 +8,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger" // ScrollTriggerをインポ�
 export default function LifeActionSection() {
   const sectionRef = useRef(null)
   const rightSidebarRef = useRef(null)
-  const innerContentRef = useRef(null) // アニメーション対象のコンテンツ用ref
   const scrollTriggerInstance = useRef<ScrollTrigger | null>(null) // ScrollTriggerインスタンスを保持するref
   const resizeObserverAnimationFrameId = useRef<number | null>(null) // ResizeObserverのrequestAnimationFrame ID
 
@@ -51,63 +50,69 @@ export default function LifeActionSection() {
 
   // ScrollTriggerをリフレッシュまたは作成する関数をメモ化
   const setupScrollTrigger = useCallback(() => {
-    if (!sectionRef.current || !rightSidebarRef.current || !innerContentRef.current) return
+    if (!sectionRef.current || !rightSidebarRef.current) return
 
     const section = sectionRef.current
     const rightSidebar = rightSidebarRef.current
-    const innerContent = innerContentRef.current
 
     // 既存のScrollTriggerインスタンスをキルしてクリーンアップ
     if (scrollTriggerInstance.current) {
-      scrollTriggerInstance.current.kill()
-      scrollTriggerInstance.current = null
+      scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
+      scrollTriggerInstance.current = null // refをクリア
     }
-    // innerContentに対する既存のTweenもキルして競合を防ぐ
-    gsap.killTweensOf(innerContent)
+
+    gsap.killTweensOf(rightSidebar) // 右サイドバーの既存のアニメーションを全て停止
+
+    // 初期位置を画面下部に設定
+    gsap.set(rightSidebar, { y: "100vh" })
 
     // ScrollTriggerを登録 (一度だけ実行されるように)
     gsap.registerPlugin(ScrollTrigger)
 
-    // innerContentの初期位置を画面下部に設定
-    gsap.set(innerContent, { y: "100vh" })
-
-    // アニメーション用のタイムラインを作成
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        id: "life-section-pin-and-scroll", // IDをユニークに
-        trigger: section,
-        start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-        end: "300vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
-        pin: true, // セクションを固定
-        scrub: true, // 修正: easeInOutCubicに相当するGSAPイージングを適用
-        snap: {
-          snapTo: [0, 1], // スナップポイントを0（開始）と1（終了）に設定
-          duration: 0.2, // スナップアニメーションの持続時間
-          ease: "power3.inOut", // スナップアニメーションのイージング
-        },
-        onLeave: () => {
-          // トリガー領域を離れる際にアニメーションが完了するようにする
-          gsap.to(innerContent, { y: "-100vh", duration: 0.5, ease: "power3.out" })
-        },
-        onEnterBack: () => {
-          // 下から再入場する際にアニメーションが正しく開始するようにする
-          gsap.set(innerContent, { y: "100vh" })
-        },
+    // メインのScrollTrigger（セクションのピン留めを制御）
+    scrollTriggerInstance.current = ScrollTrigger.create({
+      id: "life-section-pin", // IDをユニークに
+      trigger: section,
+      start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
+      end: "300vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
+      pin: true, // セクションを固定
+      scrub: true, // 修正: easeInOutCubicに相当するGSAPイージングを適用
+      snap: {
+        snapTo: [0, 1], // スナップポイントを0（開始）と1（終了）に設定
+        duration: 0.2, // スナップアニメーションの持続時間
+        ease: "power3.inOut", // スナップアニメーションのイージング
       },
+      // onUpdateを削除またはコメントアウト
+      // onUpdate: (self) => {
+      //   const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+      //   rightSidebar.scrollTop = self.progress * currentScrollHeight
+      // },
     })
 
-    // yアニメーションをタイムラインに追加
-    tl.to(innerContent, {
-      y: "-100vh", // 100vh (初期設定) から -100vh へアニメーション
-      ease: "none", // 一貫したスクロールのために線形移動
-    })
-
-    // ScrollTriggerインスタンスを保存
-    scrollTriggerInstance.current = tl.scrollTrigger
+    // rightSidebarのy位置をアニメーションさせるタイムライン
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "300vh",
+          scrub: true,
+        },
+      })
+      .to(rightSidebar, {
+        y: "50vh", // スクロール中間点でyを50vhに
+        ease: "power3.inOut",
+        duration: 0.5, // タイムラインの相対的な期間
+      })
+      .to(rightSidebar, {
+        y: "-100vh", // スクロール終了時点でyを-100vhに
+        ease: "power3.inOut",
+        duration: 0.5, // タイムラインの相対的な期間
+      })
   }, []) // 依存配列は空で、refは安定しているため
 
   useEffect(() => {
-    if (!sectionRef.current || !rightSidebarRef.current || !innerContentRef.current) return
+    if (!sectionRef.current || !rightSidebarRef.current) return
 
     const rightSidebar = rightSidebarRef.current
 
@@ -166,116 +171,114 @@ export default function LifeActionSection() {
         {/* Right content area */}
         <div
           ref={rightSidebarRef} // rightSidebarRefをアタッチ
-          className="right-sidebar-container w-full md:w-[60%] mt-10 md:mt-0 life-action-main-content-area flex flex-col mr-0 ml-[40%] h-full" // overflow-y-autoを削除
+          className="right-sidebar-container w-full md:w-[60%] mt-10 md:mt-0 life-action-main-content-area flex flex-col gap-[60px] py-5 px-5 mr-0 ml-[40%] h-full overflow-hidden" // overflow-y-autoをoverflow-hiddenに変更
         >
-          <div ref={innerContentRef} className="flex flex-col gap-[60px] py-5 px-5">
-            {sections.map((section) => (
-              <div key={section.id} className="life-action-section-group">
-                <div className="flex items-center mb-6 px-4 md:px-0 life-action-section-header">
-                  <div
-                    className="w-[88px] h-[52px] flex-shrink-0 rounded-[26px] border border-[#E9B4C2] bg-[#FFF8FA] text-[#FB6E8E] flex items-center justify-center text-[30px] leading-[20px] font-light life-action-section-number-circle"
-                    style={{
-                      boxShadow: "5px 5px 10px 0px #FFF, -3px -3px 5px 0px rgba(0, 0, 0, 0.10)",
-                    }}
-                  >
-                    {section.id}
-                  </div>
-                  <h3
-                    className="text-[28px] leading-[32px] ml-4 life-action-section-title font-semibold"
-                    style={{
-                      background: "linear-gradient(45deg, #FB789A 0%, #FFA5A6 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    {section.title}
-                  </h3>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className="ml-2 life-action-section-arrow-icon"
-                    style={{ transform: "rotate(0deg)", aspectRatio: "1/1" }}
-                  >
-                    <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="#FB6E8E" />
-                    <path d="M11 8L15 12L11 16" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
+          {sections.map((section) => (
+            <div key={section.id} className="life-action-section-group">
+              <div className="flex items-center mb-6 px-4 md:px-0 life-action-section-header">
+                <div
+                  className="w-[88px] h-[52px] flex-shrink-0 rounded-[26px] border border-[#E9B4C2] bg-[#FFF8FA] text-[#FB6E8E] flex items-center justify-center text-[30px] leading-[20px] font-light life-action-section-number-circle"
+                  style={{
+                    boxShadow: "5px 5px 10px 0px #FFF, -3px -3px 5px 0px rgba(0, 0, 0, 0.10)",
+                  }}
+                >
+                  {section.id}
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-0 life-action-cards-grid">
-                  {section.items.map((item, itemIndex) =>
-                    item.isEmpty ? (
-                      <div key={itemIndex} className="hidden lg:block"></div> // Empty div for layout in desktop
-                    ) : item.isChart ? (
-                      // Figmaデザインに基づく特別なチャートレイアウト
-                      <div
-                        key={itemIndex}
-                        className="col-span-full rounded-[10px] overflow-hidden life-action-chart-container flex-shrink-0"
-                        style={{
-                          width: "569px",
-                          height: "auto",
-                          background: "rgba(241, 241, 241, 0.60)",
-                          boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
-                        }}
-                      >
-                        {/* 上部のフラクション表示エリア */}
-                        <div
-                          className="h-[120px] relative overflow-hidden ml-6 mr-6 mt-6"
-                          style={{ borderRadius: "0px" }}
-                        >
-                          <Image
-                            src="/images/国庫納付金の内訳について.png"
-                            alt="国庫納付金の内訳について - 3/4畜産復興、2/4社会福祉"
-                            layout="fill"
-                            objectFit="cover"
-                            className=""
-                          />
-                        </div>
-
-                        {/* 下部のタイトルエリア */}
-                        <div className="p-6">
-                          <h4
-                            className="text-[16px] text-[#333333] leading-[26px] font-normal"
-                            style={{ fontFamily: '"Noto Sans JP"' }}
-                          >
-                            {item.text}
-                          </h4>
-                        </div>
-                      </div>
-                    ) : (
-                      // 通常のカードレイアウト
-                      <div
-                        key={itemIndex}
-                        className="rounded-[10px] p-4 flex flex-col justify-between items-stretch text-center overflow-hidden pt-0 pl-0 pr-0 life-action-card pb-0"
-                        style={{
-                          background: "rgba(241, 241, 241, 0.60)",
-                          boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
-                        }}
-                      >
-                        <div
-                          className="w-full pb-[66.66%] relative overflow-hidden life-action-card-image-wrapper mb-0"
-                          style={{ borderRadius: "10px 10px 0px 0px" }}
-                        >
-                          <Image
-                            src={item.image || "/placeholder.svg"}
-                            alt={item.alt}
-                            layout="fill"
-                            objectFit="cover"
-                            className=""
-                          />
-                        </div>
-                        <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed life-action-card-text px-6 mt-6 mb-6 text-left">
-                          {item.text}
-                        </p>
-                      </div>
-                    ),
-                  )}
-                </div>
+                <h3
+                  className="text-[28px] leading-[32px] ml-4 life-action-section-title font-semibold"
+                  style={{
+                    background: "linear-gradient(45deg, #FB789A 0%, #FFA5A6 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  {section.title}
+                </h3>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="ml-2 life-action-section-arrow-icon"
+                  style={{ transform: "rotate(0deg)", aspectRatio: "1/1" }}
+                >
+                  <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="#FB6E8E" />
+                  <path d="M11 8L15 12L11 16" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                </svg>
               </div>
-            ))}
-          </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-0 life-action-cards-grid">
+                {section.items.map((item, itemIndex) =>
+                  item.isEmpty ? (
+                    <div key={itemIndex} className="hidden lg:block"></div> // Empty div for layout in desktop
+                  ) : item.isChart ? (
+                    // Figmaデザインに基づく特別なチャートレイアウト
+                    <div
+                      key={itemIndex}
+                      className="col-span-full rounded-[10px] overflow-hidden life-action-chart-container flex-shrink-0"
+                      style={{
+                        width: "569px",
+                        height: "auto",
+                        background: "rgba(241, 241, 241, 0.60)",
+                        boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
+                      }}
+                    >
+                      {/* 上部のフラクション表示エリア */}
+                      <div
+                        className="h-[120px] relative overflow-hidden ml-6 mr-6 mt-6"
+                        style={{ borderRadius: "0px" }}
+                      >
+                        <Image
+                          src="/images/国庫納付金の内訳について.png"
+                          alt="国庫納付金の内訳について - 3/4畜産復興、2/4社会福祉"
+                          layout="fill"
+                          objectFit="cover"
+                          className=""
+                        />
+                      </div>
+
+                      {/* 下部のタイトルエリア */}
+                      <div className="p-6">
+                        <h4
+                          className="text-[16px] text-[#333333] leading-[26px] font-normal"
+                          style={{ fontFamily: '"Noto Sans JP"' }}
+                        >
+                          {item.text}
+                        </h4>
+                      </div>
+                    </div>
+                  ) : (
+                    // 通常のカードレイアウト
+                    <div
+                      key={itemIndex}
+                      className="rounded-[10px] p-4 flex flex-col justify-between items-stretch text-center overflow-hidden pt-0 pl-0 pr-0 life-action-card pb-0"
+                      style={{
+                        background: "rgba(241, 241, 241, 0.60)",
+                        boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
+                      }}
+                    >
+                      <div
+                        className="w-full pb-[66.66%] relative overflow-hidden life-action-card-image-wrapper mb-0"
+                        style={{ borderRadius: "10px 10px 0px 0px" }}
+                      >
+                        <Image
+                          src={item.image || "/placeholder.svg"}
+                          alt={item.alt}
+                          layout="fill"
+                          objectFit="cover"
+                          className=""
+                        />
+                      </div>
+                      <p className="text-sm md:text-base text-gray-700 font-medium leading-relaxed life-action-card-text px-6 mt-6 mb-6 text-left">
+                        {item.text}
+                      </p>
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
