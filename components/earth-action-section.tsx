@@ -169,7 +169,7 @@ export default function EarthActionSection() {
         <div className="left-sidebar-container w-[40%] flex justify-center md:justify-start earth-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
           <div className="relative w-full h-full flex p-4 earth-action-sidebar-inner-wrapper px-0 py-0 items-start flex-row">
             {/* ここにLinkコンポーネントを追加 */}
-            <Link href="https://www.jra.go.jp/">
+            <Link href="https://v0-jra-2025-earth-action.vercel.app/earth-action">
               <Image
                 src="/images/with地球_left.png"
                 alt="with 地球 JRAの環境保全活動"
