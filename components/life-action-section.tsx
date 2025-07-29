@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useCallback } from "react" // useEffectとuseRefをインポート
-import { gsap } from "gsap" // GSAPをインポート
 import { ScrollTrigger } from "gsap/ScrollTrigger" // ScrollTriggerをインポート
 
 export default function LifeActionSection() {
@@ -55,60 +54,34 @@ export default function LifeActionSection() {
     const section = sectionRef.current
     const rightSidebar = rightSidebarRef.current
 
-    // 既存のScrollTriggerインスタンスをキルしてクリーンアップ
     if (scrollTriggerInstance.current) {
-      scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
-      scrollTriggerInstance.current = null // refをクリア
-    }
-
-    gsap.killTweensOf(rightSidebar) // 右サイドバーの既存のアニメーションを全て停止
-
-    // 初期位置を画面下部に設定
-    gsap.set(rightSidebar, { y: "100vh" })
-
-    // ScrollTriggerを登録 (一度だけ実行されるように)
-    gsap.registerPlugin(ScrollTrigger)
-
-    // メインのScrollTrigger（セクションのピン留めを制御）
-    scrollTriggerInstance.current = ScrollTrigger.create({
-      id: "life-section-pin", // IDをユニークに
-      trigger: section,
-      start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-      end: "600vh", // スクロール距離を長くしてアニメーションをゆっくりに
-      pin: true, // セクションを固定
-      scrub: true, // 修正: easeInOutCubicに相当するGSAPイージングを適用
-      snap: {
-        snapTo: [0, 1], // スナップポイントを0（開始）と1（終了）に設定
-        duration: 0.2, // スナップアニメーションの持続時間
-        ease: "power3.inOut", // スナップアニメーションのイージング
-      },
-      // onUpdateを削除またはコメントアウト
-      // onUpdate: (self) => {
-      //   const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-      //   rightSidebar.scrollTop = self.progress * currentScrollHeight
-      // },
-    })
-
-    // rightSidebarのy位置をアニメーションさせるタイムライン
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "600vh", // スクロール距離を長くしてアニメーションをゆっくりに
-          scrub: true,
+      // If already exists, just refresh it
+      scrollTriggerInstance.current.refresh()
+    } else {
+      // Create ScrollTrigger if it doesn't exist
+      scrollTriggerInstance.current = ScrollTrigger.create({
+        id: "life-section-pin", // IDをユニークに
+        trigger: section,
+        start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
+        // endを関数にして、rightSidebarのスクロール可能な高さに基づいて動的に計算
+        end: () => {
+          const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+          return `+=${scrollHeight}` // rightSidebarのスクロール可能な高さ分だけ固定を継続
+        },
+        pin: true, // セクションを固定
+        scrub: "power3.inOut", // 修正: easeInOutCubicに相当するGSAPイージングを適用
+        snap: {
+          snapTo: 1,
+          duration: 0.5,
+          ease: "power3.inOut",
+        },
+        onUpdate: (self) => {
+          // メインスクロールの進行度に応じてrightSidebarのscrollTopを更新
+          const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+          rightSidebar.scrollTop = self.progress * currentScrollHeight
         },
       })
-      .to(rightSidebar, {
-        y: "50vh", // スクロール中間点でyを50vhに
-        ease: "power3.inOut",
-        duration: 4.0, // タイムラインの相対的な期間を2.0に増加
-      })
-      .to(rightSidebar, {
-        y: "-100vh", // スクロール終了時点でyを-100vhに
-        ease: "power3.inOut",
-        duration: 4.0, // タイムラインの相対的な期間を2.0に増加
-      })
+    }
   }, []) // 依存配列は空で、refは安定しているため
 
   useEffect(() => {
@@ -156,7 +129,7 @@ export default function LifeActionSection() {
       {/* Main content container */}
       <div className="w-full relative z-10 flex flex-col md:flex-row py-10 life-action-content-container gap-y-0 pl-0 pb-0 pt-0 h-full">
         {/* Left Sidebar "with 生命" section */}
-        <div className="left-sidebar-container w-[40%] flex justify-center md:justify-start life-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
+        <div className="left-sidebar-container w-full md:w-[40%] flex justify-center md:justify-start life-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
           <div className="relative w-full h-full flex justify-center p-4 life-action-sidebar-inner-wrapper px-0 py-0 items-start flex-row">
             <Image
               src="/images/with生命_left.png"
@@ -171,7 +144,7 @@ export default function LifeActionSection() {
         {/* Right content area */}
         <div
           ref={rightSidebarRef} // rightSidebarRefをアタッチ
-          className="right-sidebar-container w-full md:w-[60%] mt-10 md:mt-0 life-action-main-content-area flex flex-col gap-[60px] py-5 px-5 mr-0 ml-[40%] h-full overflow-hidden" // overflow-y-autoをoverflow-hiddenに変更
+          className="right-sidebar-container w-full md:w-[60%] mt-10 md:mt-0 life-action-main-content-area flex flex-col gap-[60px] py-5 px-5 mr-0 ml-[40%] h-full overflow-y-auto"
         >
           {sections.map((section) => (
             <div key={section.id} className="life-action-section-group">
@@ -211,8 +184,9 @@ export default function LifeActionSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-0 life-action-cards-grid">
                 {section.items.map((item, itemIndex) =>
                   item.isEmpty ? (
-                    <div key={itemIndex} className="hidden lg:block"></div>
+                    <div key={itemIndex} className="hidden lg:block"></div> // Empty div for layout in desktop
                   ) : item.isChart ? (
+                    // Figmaデザインに基づく特別なチャートレイアウト
                     <div
                       key={itemIndex}
                       className="col-span-full rounded-[10px] overflow-hidden life-action-chart-container flex-shrink-0"
@@ -222,11 +196,8 @@ export default function LifeActionSection() {
                         background: "rgba(241, 241, 241, 0.60)",
                         boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
                       }}
-                      // 将来的にこの要素内にリンク（<a>タグなど）を設定する場合、
-                      // クリックによる意図しないスクロールを防ぐために、
-                      // リンクのonClickイベントで event.preventDefault() を呼び出すことを検討してください。
-                      // 例: <a href="#" onClick={(e) => e.preventDefault()}>リンクテキスト</a>
                     >
+                      {/* 上部のフラクション表示エリア */}
                       <div
                         className="h-[120px] relative overflow-hidden ml-6 mr-6 mt-6"
                         style={{ borderRadius: "0px" }}
@@ -240,6 +211,7 @@ export default function LifeActionSection() {
                         />
                       </div>
 
+                      {/* 下部のタイトルエリア */}
                       <div className="p-6">
                         <h4
                           className="text-[16px] text-[#333333] leading-[26px] font-normal"
@@ -250,6 +222,7 @@ export default function LifeActionSection() {
                       </div>
                     </div>
                   ) : (
+                    // 通常のカードレイアウト
                     <div
                       key={itemIndex}
                       className="rounded-[10px] p-4 flex flex-col justify-between items-stretch text-center overflow-hidden pt-0 pl-0 pr-0 life-action-card pb-0"
@@ -257,10 +230,6 @@ export default function LifeActionSection() {
                         background: "rgba(241, 241, 241, 0.60)",
                         boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
                       }}
-                      // 将来的にこの要素内にリンク（<a>タグなど）を設定する場合、
-                      // クリックによる意図しないスクロールを防ぐために、
-                      // リンクのonClickイベントで event.preventDefault() を呼び出すことを検討してください。
-                      // 例: <a href="#" onClick={(e) => e.preventDefault()}>リンクテキスト</a>
                     >
                       <div
                         className="w-full pb-[66.66%] relative overflow-hidden life-action-card-image-wrapper mb-0"

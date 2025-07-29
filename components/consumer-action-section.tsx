@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useCallback } from "react" // useEffectとuseRefをインポート
-import { gsap } from "gsap" // GSAPをインポート
 import { ScrollTrigger } from "gsap/ScrollTrigger" // ScrollTriggerをインポート
 
 export default function ConsumerActionSection() {
@@ -54,54 +53,34 @@ export default function ConsumerActionSection() {
     const section = sectionRef.current
     const rightSidebar = rightSidebarRef.current
 
-    // 既存のScrollTriggerインスタンスをキルしてクリーンアップ
     if (scrollTriggerInstance.current) {
-      scrollTriggerInstance.current.kill() // このセクションのScrollTriggerをキル
-      scrollTriggerInstance.current = null // refをクリア
-    }
-
-    gsap.killTweensOf(rightSidebar) // 右サイドバーの既存のアニメーションを全て停止
-
-    // 初期位置を画面下部に設定
-    gsap.set(rightSidebar, { y: "100vh" })
-
-    // ScrollTriggerを登録 (一度だけ実行されるように)
-    gsap.registerPlugin(ScrollTrigger)
-
-    // メインのScrollTrigger（セクションのピン留めを制御）
-    scrollTriggerInstance.current = ScrollTrigger.create({
-      id: "consumer-section-pin", // IDをユニークに
-      trigger: section,
-      start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-      end: "600vh", // スクロール距離を長くしてアニメーションをゆっくりに
-      pin: true, // セクションを固定
-      scrub: true, // スクロール位置とアニメーションの進行度を滑らかに連動
-      snap: {
-        snapTo: [0, 1], // スナップポイントを0（開始）と1（終了）に設定
-        duration: 0.2, // スナップアニメーションの持続時間
-        ease: "power3.inOut", // スナップアニメーションのイージング
-      },
-    })
-
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "600vh", // スクロール距離を長くしてアニメーションをゆっくりに
-          scrub: true,
+      // If already exists, just refresh it
+      scrollTriggerInstance.current.refresh()
+    } else {
+      // Create ScrollTrigger if it doesn't exist
+      scrollTriggerInstance.current = ScrollTrigger.create({
+        id: "consumer-section-pin", // IDをユニークに
+        trigger: section,
+        start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
+        // endを関数にして、rightSidebarのスクロール可能な高さに基づいて動的に計算
+        end: () => {
+          const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+          return `+=${scrollHeight}` // rightSidebarのスクロール可能な高さ分だけ固定を継続
+        },
+        pin: true, // セクションを固定
+        scrub: "power3.inOut", // 修正: easeInOutCubicに相当するGSAPイージングを適用
+        snap: {
+          snapTo: 1,
+          duration: 0.5,
+          ease: "power3.inOut",
+        },
+        onUpdate: (self) => {
+          // メインスクロールの進行度に応じてrightSidebarのscrollTopを更新
+          const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+          rightSidebar.scrollTop = self.progress * currentScrollHeight
         },
       })
-      .to(rightSidebar, {
-        y: "50vh", // スクロール中間点でyを50vhに
-        ease: "power3.inOut",
-        duration: 4.0, // タイムラインの相対的な期間を2.0に増加
-      })
-      .to(rightSidebar, {
-        y: "-100vh", // スクロール終了時点でyを-100vhに
-        ease: "power3.inOut",
-        duration: 4.0, // タイムラインの相対的な期間を2.0に増加
-      })
+    }
   }, []) // 依存配列は空で、refは安定しているため
 
   useEffect(() => {
@@ -150,7 +129,7 @@ export default function ConsumerActionSection() {
       {/* Main content container */}
       <div className="w-full relative z-10 flex flex-col md:flex-row py-10 consumer-action-content-container gap-y-0 pl-0 pt-0 pb-0 h-full">
         {/* Left Sidebar "with 生活者" section */}
-        <div className="left-sidebar-container w-[40%] flex justify-center md:justify-start consumer-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
+        <div className="left-sidebar-container w-full md:w-[40%] flex justify-center md:justify-start consumer-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
           <div className="relative w-full h-full flex justify-center p-4 consumer-action-sidebar-inner-wrapper px-0 py-0 items-start flex-row">
             <Image src="/images/with馬_left.png" alt="with 馬 馬との共生" layout="fill" objectFit="cover" priority />
           </div>
@@ -159,7 +138,7 @@ export default function ConsumerActionSection() {
         {/* Right content area */}
         <div
           ref={rightSidebarRef} // rightSidebarRefをアタッチ
-          className="right-sidebar-container w-full md:w-[60%] mt-10 md:mt-0 consumer-action-main-content-area flex flex-col gap-[60px] px-5 py-5 mr-0 ml-[40%] h-full overflow-hidden" // overflow-y-autoをoverflow-hiddenに変更
+          className="right-sidebar-container w-full md:w-[60%] mt-10 md:mt-0 consumer-action-main-content-area flex flex-col gap-[60px] px-5 py-5 mr-0 ml-[40%] h-full overflow-y-auto"
         >
           {sections.map((section) => (
             <div key={section.id} className="consumer-action-section-group">
@@ -208,10 +187,6 @@ export default function ConsumerActionSection() {
                         background: "rgba(241, 241, 241, 0.60)",
                         boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
                       }}
-                      // 将来的にこの要素内にリンク（<a>タグなど）を設定する場合、
-                      // クリックによる意図しないスクロールを防ぐために、
-                      // リンクのonClickイベントで event.preventDefault() を呼び出すことを検討してください。
-                      // 例: <a href="#" onClick={(e) => e.preventDefault()}>リンクテキスト</a>
                     >
                       <div
                         className="w-full pb-[66.66%] relative overflow-hidden consumer-action-card-image-wrapper mb-0"
