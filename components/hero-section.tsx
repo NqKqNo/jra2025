@@ -111,9 +111,9 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
           <Image
             src="/images/with生命.png"
             alt="with 生命"
-            width={300}
-            height={300}
-            className="w-[130px] h-[130px] object-contain"
+            width={130}
+            height={130}
+            className="w-[130px] h-[130px] object-contain transition-transform duration-300 hover:scale-1.2"
           />
         </Link>
         {/* with 社会 */}
@@ -128,9 +128,9 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
           <Image
             src="/images/with社会.png"
             alt="with 社会"
-            width={300}
-            height={300}
-            className="w-[130px] h-[130px] object-contain"
+            width={130}
+            height={130}
+            className="w-[130px] h-[130px] object-contain transition-transform duration-300 hover:scale-1.2"
           />
         </Link>
         {/* with 生活者 */}
@@ -145,9 +145,9 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
           <Image
             src="/images/with馬.png"
             alt="with 馬"
-            width={300}
-            height={300}
-            className="w-[130px] h-[130px] object-contain transition-transform duration-300 hover:scale-120"
+            width={130}
+            height={130}
+            className="w-[130px] h-[130px] object-contain transition-transform duration-300 hover:scale-1.2"
           />
         </Link>
       </div>
