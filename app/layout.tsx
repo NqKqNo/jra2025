@@ -26,6 +26,7 @@ html {
   --font-mono: ${GeistMono.variable};
 }
         `}</style>
+        <meta name="robots" content="noindex, nofollow" />
       </head>
       <body>
         {children}
