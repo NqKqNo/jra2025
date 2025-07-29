@@ -46,7 +46,7 @@ export default function EarthAdditionalBannerSection() {
               <feComponentTransfer in="alphaNoise" result="coloredNoise1">
                 <feFuncA
                   type="discrete"
-                  tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 "
+                  tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 "
                 />
               </feComponentTransfer>
               <feComposite operator="in" in2="effect1_foregroundBlur_new" in="coloredNoise1" result="noise1Clipped" />
@@ -82,7 +82,7 @@ export default function EarthAdditionalBannerSection() {
           aspectRatio: "1 / 1",
           zIndex: 0,
           pointerEvents: "none",
-          // transform: "translateX(50%)", // 右側に50%はみ出す
+          transform: "translateX(50%)", // 右側に50%はみ出す
         }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1302 1302" fill="none">
@@ -114,7 +114,7 @@ export default function EarthAdditionalBannerSection() {
               <feComponentTransfer in="alphaNoise" result="coloredNoise1">
                 <feFuncA
                   type="discrete"
-                  tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 "
+                  tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 "
                 />
               </feComponentTransfer>
               <feComposite operator="in" in2="effect1_foregroundBlur_05" in="coloredNoise1" result="noise1Clipped" />
