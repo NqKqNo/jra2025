@@ -78,11 +78,7 @@ export default function EarthActionSection() {
       id: "earth-section-pin", // IDを付与して管理しやすくする
       trigger: section,
       start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-      // endを関数にして、rightSidebarのスクロール可能な高さに基づいて動的に計算
-      end: () => {
-        const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-        return `+=${scrollHeight}` // rightSidebarのスクロール可能な高さ分だけ固定を継続
-      },
+      end: "200vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
       pin: true, // セクションを固定
       scrub: "power3.inOut", // これがイージングを制御する設定です
       snap: {
