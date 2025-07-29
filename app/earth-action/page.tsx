@@ -10,7 +10,7 @@ import EarthAdditionalBannerSection from "@/components/earth-additional-banner-s
 
 export default function EarthActionPage() {
   return (
-    <div className="earth-action-page-container flex flex-col min-h-screen overflow-x-hidden">
+    <div className="earth-action-page-container flex flex-col min-h-screen">
       <Header />
       <EarthMainContentArea />
       <EarthInitiativesSection />

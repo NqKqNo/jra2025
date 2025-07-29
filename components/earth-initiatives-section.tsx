@@ -227,7 +227,6 @@ export default function EarthInitiativesSection() {
           aspectRatio: "1 / 1",
           zIndex: 0,
           pointerEvents: "none",
-          transform: "translateX(50%)", // Pushes it 50% of its own width to the right
         }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1916 1916" fill="none">
