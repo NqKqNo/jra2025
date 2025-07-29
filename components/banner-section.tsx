@@ -7,7 +7,7 @@ export default function BannerSection() {
     >
       <div
         className="relative w-full max-w-4xl rounded-lg shadow-md overflow-hidden"
-        style={{ height: "160px" }} // ← 明示的にここで高さ指定
+        style={{ height: "140px" }} // ← 明示的にここで高さ指定
       >
         <Image
           src="/images/banner-special-content.png"
