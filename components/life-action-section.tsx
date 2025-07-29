@@ -74,7 +74,7 @@ export default function LifeActionSection() {
       id: "life-section-pin", // IDをユニークに
       trigger: section,
       start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-      end: "300vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
+      end: "bottom bottom", // 変更: トリガー要素のボトムがビューポートのボトムに到達したら終了
       pin: true, // セクションを固定
       scrub: true, // 修正: easeInOutCubicに相当するGSAPイージングを適用
       snap: {
@@ -95,19 +95,19 @@ export default function LifeActionSection() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "300vh",
+          end: "bottom bottom", // 変更: トリガー要素のボトムがビューポートのボトムに到達したら終了
           scrub: true,
         },
       })
       .to(rightSidebar, {
         y: "50vh", // スクロール中間点でyを50vhに
         ease: "power3.inOut",
-        duration: 0.5, // タイムラインの相対的な期間
+        duration: 4.0, // タイムラインの相対的な期間を2.0に増加
       })
       .to(rightSidebar, {
         y: "-100vh", // スクロール終了時点でyを-100vhに
         ease: "power3.inOut",
-        duration: 0.5, // タイムラインの相対的な期間
+        duration: 4.0, // タイムラインの相対的な期間を2.0に増加
       })
   }, []) // 依存配列は空で、refは安定しているため
 
@@ -211,9 +211,8 @@ export default function LifeActionSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-0 life-action-cards-grid">
                 {section.items.map((item, itemIndex) =>
                   item.isEmpty ? (
-                    <div key={itemIndex} className="hidden lg:block"></div> // Empty div for layout in desktop
+                    <div key={itemIndex} className="hidden lg:block"></div>
                   ) : item.isChart ? (
-                    // Figmaデザインに基づく特別なチャートレイアウト
                     <div
                       key={itemIndex}
                       className="col-span-full rounded-[10px] overflow-hidden life-action-chart-container flex-shrink-0"
@@ -223,8 +222,11 @@ export default function LifeActionSection() {
                         background: "rgba(241, 241, 241, 0.60)",
                         boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
                       }}
+                      // 将来的にこの要素内にリンク（<a>タグなど）を設定する場合、
+                      // クリックによる意図しないスクロールを防ぐために、
+                      // リンクのonClickイベントで event.preventDefault() を呼び出すことを検討してください。
+                      // 例: <a href="#" onClick={(e) => e.preventDefault()}>リンクテキスト</a>
                     >
-                      {/* 上部のフラクション表示エリア */}
                       <div
                         className="h-[120px] relative overflow-hidden ml-6 mr-6 mt-6"
                         style={{ borderRadius: "0px" }}
@@ -238,7 +240,6 @@ export default function LifeActionSection() {
                         />
                       </div>
 
-                      {/* 下部のタイトルエリア */}
                       <div className="p-6">
                         <h4
                           className="text-[16px] text-[#333333] leading-[26px] font-normal"
@@ -249,7 +250,6 @@ export default function LifeActionSection() {
                       </div>
                     </div>
                   ) : (
-                    // 通常のカードレイアウト
                     <div
                       key={itemIndex}
                       className="rounded-[10px] p-4 flex flex-col justify-between items-stretch text-center overflow-hidden pt-0 pl-0 pr-0 life-action-card pb-0"
@@ -257,6 +257,10 @@ export default function LifeActionSection() {
                         background: "rgba(241, 241, 241, 0.60)",
                         boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
                       }}
+                      // 将来的にこの要素内にリンク（<a>タグなど）を設定する場合、
+                      // クリックによる意図しないスクロールを防ぐために、
+                      // リンクのonClickイベントで event.preventDefault() を呼び出すことを検討してください。
+                      // 例: <a href="#" onClick={(e) => e.preventDefault()}>リンクテキスト</a>
                     >
                       <div
                         className="w-full pb-[66.66%] relative overflow-hidden life-action-card-image-wrapper mb-0"

@@ -74,7 +74,7 @@ export default function SocietyActionSection() {
       id: "society-section-pin", // IDをユニークに
       trigger: section,
       start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-      end: "300vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
+      end: "150vh", // 変更: 300vh から 150vh
       pin: true, // セクションを固定
       scrub: true, // 修正: easeInOutCubicに相当するGSAPイージングを適用
       snap: {
@@ -95,19 +95,19 @@ export default function SocietyActionSection() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "300vh",
+          end: "150vh", // 変更: 300vh から 150vh
           scrub: true,
         },
       })
       .to(rightSidebar, {
         y: "50vh", // スクロール中間点でyを50vhに
         ease: "power3.inOut",
-        duration: 0.5, // タイムラインの相対的な期間
+        duration: 2.0, // タイムラインの相対的な期間を2.0に増加
       })
       .to(rightSidebar, {
         y: "-100vh", // スクロール終了時点でyを-100vhに
         ease: "power3.inOut",
-        duration: 0.5, // タイムラインの相対的な期間
+        duration: 2.0, // タイムラインの相対的な期間を2.0に増加
       })
   }, []) // 依存配列は空で、refは安定しているため
 

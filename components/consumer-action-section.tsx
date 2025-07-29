@@ -73,7 +73,7 @@ export default function ConsumerActionSection() {
       id: "consumer-section-pin", // IDをユニークに
       trigger: section,
       start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-      end: "300vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
+      end: "bottom bottom", // 変更: トリガー要素のボトムがビューポートのボトムに到達したら終了
       pin: true, // セクションを固定
       scrub: true, // スクロール位置とアニメーションの進行度を滑らかに連動
       snap: {
@@ -81,32 +81,26 @@ export default function ConsumerActionSection() {
         duration: 0.2, // スナップアニメーションの持続時間
         ease: "power3.inOut", // スナップアニメーションのイージング
       },
-      // onUpdateを削除またはコメントアウト
-      // onUpdate: (self) => {
-      //   const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-      //   rightSidebar.scrollTop = self.progress * currentScrollHeight
-      // },
     })
 
-    // rightSidebarのy位置をアニメーションさせるタイムライン
     gsap
       .timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "300vh",
+          end: "bottom bottom", // 変更: トリガー要素のボトムがビューポートのボトムに到達したら終了
           scrub: true,
         },
       })
       .to(rightSidebar, {
         y: "50vh", // スクロール中間点でyを50vhに
         ease: "power3.inOut",
-        duration: 0.5, // タイムラインの相対的な期間
+        duration: 4.0, // タイムラインの相対的な期間を2.0に増加
       })
       .to(rightSidebar, {
         y: "-100vh", // スクロール終了時点でyを-100vhに
         ease: "power3.inOut",
-        duration: 0.5, // タイムラインの相対的な期間
+        duration: 4.0, // タイムラインの相対的な期間を2.0に増加
       })
   }, []) // 依存配列は空で、refは安定しているため
 
@@ -214,6 +208,10 @@ export default function ConsumerActionSection() {
                         background: "rgba(241, 241, 241, 0.60)",
                         boxShadow: "-2px -2px 5px 0px #FFF, 3px 3px 5px 0px rgba(0, 0, 0, 0.10)",
                       }}
+                      // 将来的にこの要素内にリンク（<a>タグなど）を設定する場合、
+                      // クリックによる意図しないスクロールを防ぐために、
+                      // リンクのonClickイベントで event.preventDefault() を呼び出すことを検討してください。
+                      // 例: <a href="#" onClick={(e) => e.preventDefault()}>リンクテキスト</a>
                     >
                       <div
                         className="w-full pb-[66.66%] relative overflow-hidden consumer-action-card-image-wrapper mb-0"

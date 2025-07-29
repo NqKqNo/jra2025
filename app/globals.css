@@ -81,6 +81,12 @@
 }
 
 @layer base {
+  html {
+    font-family: var(--font-sans);
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+    overflow-x: hidden; /* Added to prevent horizontal scrolling */
+  }
   * {
     @apply border-border;
   }
