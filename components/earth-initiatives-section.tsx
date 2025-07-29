@@ -37,6 +37,7 @@ export default function EarthInitiativesSection() {
               </div>
             ),
           },
+        },
         {
           image: "/images/バイオマス燃焼発電プラントの導入.jpg",
           alt: "バイオマス発電プラント",
@@ -61,6 +62,7 @@ export default function EarthInitiativesSection() {
               </div>
             ),
           },
+        },
         {
           image: "/images/エネルギーコントロールのための監視システム.jpg",
           alt: "監視システム",
@@ -116,6 +118,7 @@ export default function EarthInitiativesSection() {
               </div>
             ),
           },
+        },
         {
           image: "/images/調教用ゼッケンをさらにリサイクル.jpg",
           alt: "リサイクルゼッケン",
@@ -126,7 +129,7 @@ export default function EarthInitiativesSection() {
             content: (
               <div className="flex flex-col items-start p-2 text-left w-full py-0 px-0">
                 <h5 className="text-[#2EAAE4] text-base font-bold mb-2">調教用ゼッケン</h5>
-                
+
                 <div className="w-full flex justify-center bg-transparent rounded-md mb-0 py-0 relative pt-[calc(100/250*100%)]">
                   <Image
                     src="/images/調教用ゼッケンをさらにリサイクル_illust.png"
@@ -138,6 +141,7 @@ export default function EarthInitiativesSection() {
               </div>
             ),
           },
+        },
         {
           image: "/images/雨水の循環型有効活用.jpg",
           alt: "雨水利用",
@@ -148,7 +152,7 @@ export default function EarthInitiativesSection() {
             content: (
               <div className="flex flex-col items-start p-2 text-left w-full px-0 py-0">
                 <h5 className="text-[#2EAAE4] text-base font-bold mb-2">水源の節約量</h5>
-                
+
                 <div className="w-full flex justify-center bg-transparent rounded-md py-0 mb-0 relative pt-[calc(100/250*100%)]">
                   <Image
                     src="/images/雨水の循環型有効活用_illust.png"
