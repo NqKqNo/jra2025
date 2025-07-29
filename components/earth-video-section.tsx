@@ -6,19 +6,19 @@ export default function EarthVideoSection() {
   const videos = [
     {
       id: 1,
-      thumbnail: "/images/環境への取り組みについて.png", // 画像を更新
+      thumbnail: "/images/環境への取り組みについて.jpg", // 画像を更新
       title: "環境への取り組みについて",
       link: "#",
     },
     {
       id: 2,
-      thumbnail: "/images/ペットボトル再利用.png", // 画像を更新
+      thumbnail: "/images/ペットボトル再利用.jpg", // 画像を更新
       title: "ペットボトル再利用",
       link: "#",
     },
     {
       id: 3,
-      thumbnail: "/images/バイオマス発電.png", // 画像を更新
+      thumbnail: "/images/バイオマス発電.jpg", // 画像を更新
       title: "バイオマス発電",
       link: "#",
     },
