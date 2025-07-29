@@ -83,6 +83,9 @@ export default function Header({ ref }: HeaderProps) {
             競馬場・ウインズ・指定席
           </Link>
           <Link href="#" className="bg-[#226600] px-4 py-2 text-white font-bold text-sm mx-2.5" prefetch={false}>
+            サステナビリティ
+          </Link>
+          <Link href="#" className="text-white hover:text-gray-200 font-bold text-sm mx-2.5" prefetch={false}>
             企業情報
           </Link>
         </div>
