@@ -41,17 +41,6 @@ export default function NewsSection() {
         }}
       ></div>
       {/* 右下の背景オブジェクト */}
-      <div
-        className="absolute flex-shrink-0 rounded-full z-0"
-        style={{
-          width: "1000px", // サイズを1/2に
-          height: "1000px", // サイズを1/2に
-          bottom: "-500px", // 位置を調整
-          right: "-500px", // 位置を右下に調整
-          background: "radial-gradient(50% 50% at 50% 50%, rgba(126, 223, 84, 0.10) 0%, rgba(126, 223, 84, 0.03) 100%)",
-          filter: "blur(100px)",
-        }}
-      ></div>
       <div className="w-full max-w-5xl bg-news-bg-alpha rounded-[10px] shadow-news-card p-8 md:p-12 flex flex-col md:flex-row relative overflow-hidden items-center z-10">
         {" "}
         {/* z-indexを追加して手前に表示 */}
