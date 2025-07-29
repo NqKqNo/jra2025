@@ -1,120 +1,116 @@
-import type { Ref } from "react" // Ref型をインポート
+"use client"
+
+import { useState, useEffect } from "react"
+import Image from "next/image"
 import Link from "next/link"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { SearchIcon } from "lucide-react" // LockIcon, HelpCircleIcon は不要になったため削除
+import { Menu, X } from "lucide-react"
 
-// refを受け取るためのProps型を定義
-type HeaderProps = {
-  ref?: Ref<HTMLElement>
-}
+export function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
 
-export default function Header({ ref }: HeaderProps) {
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+  }
+
   return (
-    <header ref={ref} className="w-full shadow-sm fixed top-0 left-0 right-0 z-50">
-      {/* トップバー */}
-      <div className="w-full flex h-16 items-center justify-between bg-[#268300] px-4 md:px-6 mx-auto gap-x-0">
-        <Link href="#" className="flex items-center gap-2" prefetch={false}>
-          <img src="/images/jra-logo.png" alt="JRAロゴ" width={100} height={24} className="h-6 object-contain" />
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isScrolled ? "bg-white shadow-md py-2" : "bg-transparent py-4"
+      }`}
+    >
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/images/jra-logo.png"
+            alt="JRA Logo"
+            width={isScrolled ? 80 : 100}
+            height={isScrolled ? 40 : 50}
+            className="transition-all duration-300"
+          />
         </Link>
-        <div className="flex items-center gap-4 justify-start">
-          <Link href="#" prefetch={false}>
-            <img
-              src="/images/net-touhyou-login.png"
-              alt="ネット投票ログイン"
-              width={140}
-              height={40}
-              className="h-10 object-contain"
-            />
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex space-x-8 items-center">
+          <Link
+            href="#"
+            className={`text-lg font-medium ${
+              isScrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-gray-200"
+            } transition-colors duration-300`}
+          >
+            JRAのサステナビリティ
           </Link>
-          <Link href="#" prefetch={false}>
-            <img
-              src="/images/otoiawase-faq.png"
-              alt="お問い合わせFAQ"
-              width={140}
-              height={40}
-              className="h-10 object-contain"
-            />
+          <Link
+            href="#"
+            className={`text-lg font-medium ${
+              isScrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-gray-200"
+            } transition-colors duration-300`}
+          >
+            ニュース
           </Link>
-          <div className="relative hidden md:block">
-            <Input
-              type="search"
-              placeholder="サイト内検索"
-              className="w-[200px] rounded-md border border-gray-300 bg-white pl-8 text-sm text-gray-700 placeholder:text-gray-400 focus:border-[#0066CC] focus:ring-[#0066CC]"
-            />
-            <SearchIcon className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          </div>
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <SearchIcon className="h-5 w-5 text-white" />
-            <span className="sr-only">検索</span>
+          <Link
+            href="#"
+            className={`text-lg font-medium ${
+              isScrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-gray-200"
+            } transition-colors duration-300`}
+          >
+            CMギャラリー
+          </Link>
+          <Button
+            className={`rounded-full px-6 py-3 text-lg font-bold shadow-lg transition-all duration-300 ${
+              isScrolled
+                ? "bg-gradient-to-r from-[#2EAAE4] to-[#50C4F2] text-white hover:from-[#50C4F2] hover:to-[#2EAAE4]"
+                : "bg-white text-[#1FA9EA] hover:bg-gray-100"
+            }`}
+          >
+            お問い合わせ
           </Button>
-        </div>
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <Button variant="ghost" size="icon" className="md:hidden text-white" onClick={toggleMenu}>
+          {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+        </Button>
       </div>
 
-      {/* メインナビゲーション */}
-      <nav className="bg-[#333333] py-0">
-        {" "}
-        {/* py-0 から py-3 に変更 */}
-        <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 md:justify-center">
-          <Link href="#" className="text-white hover:text-gray-200 font-bold text-sm mx-2.5" prefetch={false}>
-            {" "}
-            {/* text-xs から text-sm に変更 */}
-            競馬メニュー
-          </Link>
-          <Link href="#" className="text-white hover:text-gray-200 font-bold text-sm mx-2.5" prefetch={false}>
-            馬券・JRA-UMACA
-          </Link>
-          <Link href="#" className="text-white hover:text-gray-200 font-bold text-sm mx-2.5" prefetch={false}>
-            ネット投票導入
-          </Link>
-          <Link href="#" className="text-white hover:text-gray-200 font-bold text-sm mx-2.5" prefetch={false}>
-            {" "}
-            {/* mx-2 から mx-2.5 に変更 */}
-            イベント・プロモーション
-          </Link>
-          <Link href="#" className="text-white hover:text-gray-200 font-bold text-sm mx-2.5" prefetch={false}>
-            競馬場・ウインズ・指定席
-          </Link>
-          <Link href="#" className="bg-[#226600] px-4 py-2 text-white font-bold text-sm mx-2.5" prefetch={false}>
-            サステナビリティ
-          </Link>
-          <Link href="#" className="text-white hover:text-gray-200 font-bold text-sm mx-2.5" prefetch={false}>
-            企業情報
-          </Link>
+      {/* Mobile Navigation */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-white shadow-lg py-4 mt-2">
+          <nav className="flex flex-col items-center space-y-4">
+            <Link href="#" className="text-lg font-medium text-gray-700 hover:text-blue-600" onClick={toggleMenu}>
+              JRAのサステナビリティ
+            </Link>
+            <Link href="#" className="text-lg font-medium text-gray-700 hover:text-blue-600" onClick={toggleMenu}>
+              ニュース
+            </Link>
+            <Link href="#" className="text-lg font-medium text-gray-700 hover:text-blue-600" onClick={toggleMenu}>
+              CMギャラリー
+            </Link>
+            <Button
+              className="rounded-full px-6 py-3 text-lg font-bold shadow-lg bg-gradient-to-r from-[#2EAAE4] to-[#50C4F2] text-white hover:from-[#50C4F2] hover:to-[#2EAAE4]"
+              onClick={toggleMenu}
+            >
+              お問い合わせ
+            </Button>
+          </nav>
         </div>
-      </nav>
-
-      {/* パンくずリスト */}
-      <div className="w-full bg-[#F0F0F0] py-3 px-4 md:px-5">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#" className="text-[#0066CC] font-bold text-sm">
-                {" "}
-                {/* text-xs から text-sm に変更 */}
-                ホーム
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="text-gray-400" />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#" className="text-[#333333] font-bold text-sm">
-                {" "}
-                {/* text-xs から text-sm に変更 */}
-                サステナビリティ
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-
-            <BreadcrumbItem></BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+      )}
     </header>
   )
 }

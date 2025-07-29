@@ -84,12 +84,10 @@ export default function EarthActionPage() {
   }, [headerHeight])
 
   return (
-    <>
+    <main className="flex min-h-screen flex-col items-center justify-between">
       <Header ref={headerRef} />
-      <div style={{ paddingTop: `${headerHeight}px` }}>
-        <EarthActionSection />
-        <Footer />
-      </div>
-    </>
+      <EarthActionSection />
+      <Footer />
+    </main>
   )
 }

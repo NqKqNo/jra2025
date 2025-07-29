@@ -1,171 +1,82 @@
-"use client" // クライアントコンポーネントとしてマーク
+"use client"
 
-import Link from "next/link"
 import Image from "next/image"
-import { useState, useEffect } from "react" // useStateとuseEffectをインポート
+import { useEffect, useRef } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 
-type HeroSectionProps = {
-  headerHeight: number // headerHeightを受け取るためのプロップ型を定義
-}
+gsap.registerPlugin(ScrollTrigger)
 
-export default function HeroSection({ headerHeight }: HeroSectionProps) {
-  const [showActionLinks, setShowActionLinks] = useState(false) // mv-action-links用
-  const [showHeroCircleBg, setShowHeroCircleBg] = useState(false) // hero-background-circle用
-  const [showMvLogo, setShowMvLogo] = useState(false) // MVロゴ用
-  const [showMvBottomCurve, setShowMvBottomCurve] = useState(false) // mv-bottom-curve用
+export function HeroSection() {
+  const sectionRef = useRef(null)
+  const logoRef = useRef(null)
+  const scrollIndicatorRef = useRef(null)
 
   useEffect(() => {
-    // hero-background-circle のアニメーション
-    const circleTimer = setTimeout(() => {
-      setShowHeroCircleBg(true)
-    }, 4000) // 4秒の遅延
+    const section = sectionRef.current
+    const logo = logoRef.current
+    const scrollIndicator = scrollIndicatorRef.current
 
-    // mv-action-links のアニメーション
-    const linksTimer = setTimeout(() => {
-      setShowActionLinks(true)
-    }, 7000) // 6秒の遅延
+    if (!section || !logo || !scrollIndicator) return
 
-    // MVロゴのアニメーション
-    const logoTimer = setTimeout(() => {
-      setShowMvLogo(true)
-    }, 5000) // 4秒の遅延
+    // Initial animation for logo
+    gsap.fromTo(logo, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out" })
 
-    // mv-bottom-curve のアニメーション
-    const bottomCurveTimer = setTimeout(() => {
-      setShowMvBottomCurve(true)
-    }, 6000) // 5秒の遅延
+    // Scroll indicator animation
+    gsap.fromTo(
+      scrollIndicator,
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        delay: 0.5,
+        repeat: -1, // Infinite repeat
+        yoyo: true, // Go back and forth
+      },
+    )
 
-    return () => {
-      clearTimeout(circleTimer) // クリーンアップ
-      clearTimeout(linksTimer) // クリーンアップ
-      clearTimeout(logoTimer) // クリーンアップ
-      clearTimeout(bottomCurveTimer) // クリーンアップ
-    }
+    // Parallax effect for background image
+    gsap.to(section, {
+      backgroundPositionY: "100%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    })
   }, [])
 
   return (
     <section
-      className="relative w-full flex flex-col items-center justify-start text-white px-4 md:px-6 overflow-hidden"
-      style={{ minHeight: `calc(100vh - ${headerHeight}px)` }} // headerHeightに基づいて高さを調整
+      ref={sectionRef}
+      className="relative w-full h-[100vh] flex flex-col items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: "url('/images/hero-background.jpg')" }}
     >
-      <video
-        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/FV-hRGlaNBfEfZ5LLx944trZMkieTlW8j.mp4"
-        autoPlay
-        muted
-        playsInline
-        loop={false}
-        className="absolute top-0 left-0 w-full h-full object-cover z-[-3]" // z-indexを調整して最背面に配置
-      />
-      {/* 背景左上のオブジェクト */}
-      <div
-        className="absolute w-[887px] h-[887px] flex-shrink-0 rounded-full z-[-1]"
-        style={{
-          top: "-200px", // 位置を調整
-          left: "-200px", // 位置を左上に調整
-          background: "radial-gradient(50% 50% at 50% 50%, rgba(0, 170, 67, 0.10) 0%, rgba(0, 170, 67, 0.03) 100%)",
-          filter: "blur(100px)",
-        }}
-      ></div>
-      {/* 背景右下のオブジェクト */}
-      <div
-        className="absolute w-[706px] h-[706px] flex-shrink-0 rounded-full z-[-1]"
-        style={{
-          bottom: "-200px", // 位置を調整
-          right: "-200px", // 位置を右下に調整
-          background: "radial-gradient(50% 50% at 50% 50%, rgba(126, 223, 84, 0.10) 0%, rgba(126, 223, 84, 0.03) 100%)",
-          filter: "blur(100px)",
-        }}
-      ></div>
-      {/* MVセクション画面中央にロゴを追加 */}
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-black opacity-30 z-0"></div>
 
-      {/* アニメーションを追加するdiv - 親コンテナはレイアウトのみを担当 */}
-      <div className="mv-action-links relative z-20 flex flex-col md:flex-row gap-4 md:gap-4 mt-auto mb-0 md:mb-4">
-        {" "}
-        {/* z-indexをz-20に変更 */}
-        {/* with 地球 */}
-        <Link
-          href="#earth-action-section"
-          className={`flex flex-col items-center transition-all duration-500 ease-out ${
-            showActionLinks ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
-          }`}
-          style={{ transitionDelay: showActionLinks ? "0s" : "0s" }} // 個別アニメーション用
-          prefetch={false}
-        >
-          <Image
-            src="/images/with地球.png"
-            alt="with 地球"
-            width={300}
-            height={300}
-            className="w-[154px] h-[154px] object-contain transition-transform duration-300 hover:scale-120"
-          />
-        </Link>
-        {/* with 生命 */}
-        <Link
-          href="#life-action-section"
-          className={`flex flex-col items-center relative -top-[30px] transition-all duration-500 ease-out ${
-            showActionLinks ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
-          }`}
-          style={{ transitionDelay: showActionLinks ? "0.2s" : "0s" }} // 個別アニメーション用
-          prefetch={false}
-        >
-          <Image
-            src="/images/with生命.png"
-            alt="with 生命"
-            width={300}
-            height={300}
-            className="w-[154px] h-[154px] object-contain"
-          />
-        </Link>
-        {/* with 社会 */}
-        <Link
-          href="#society-action-section"
-          className={`flex flex-col items-center relative -top-[30px] transition-all duration-500 ease-out ${
-            showActionLinks ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
-          }`}
-          style={{ transitionDelay: showActionLinks ? "0.4s" : "0s" }} // 個別アニメーション用
-          prefetch={false}
-        >
-          <Image
-            src="/images/with社会.png"
-            alt="with 社会"
-            width={300}
-            height={300}
-            className="w-[154px] h-[154px] object-contain"
-          />
-        </Link>
-        {/* with 生活者 */}
-        <Link
-          href="#consumer-action-section"
-          className={`flex flex-col items-center transition-all duration-500 ease-out ${
-            showActionLinks ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
-          }`}
-          style={{ transitionDelay: showActionLinks ? "0.6s" : "0s" }} // 個別アニメーション用
-          prefetch={false}
-        >
-          <Image
-            src="/images/with馬.png"
-            alt="with 馬"
-            width={300}
-            height={300}
-            className="w-[154px] h-[154px] object-contain transition-transform duration-300 hover:scale-120"
-          />
-        </Link>
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center p-4">
+        <Image
+          ref={logoRef}
+          src="/images/mv_logo.png"
+          alt="JRA Logo"
+          width={400}
+          height={200}
+          className="mb-8 opacity-0" // Initial opacity set to 0 for animation
+        />
+        <p className="text-white text-lg md:text-xl lg:text-2xl font-medium max-w-3xl">
+          JRAは、競馬という文化を通じて、社会とともに、地球とともに、生命とともに、生活者とともに、そして馬とともに、持続可能な社会の実現に貢献していきます。
+        </p>
       </div>
-      {/* 半円オブジェクト */}
-      <Image
-        src="/images/mv-bottom-curve.png"
-        alt="Bottom Curve"
-        width={1920} // 元画像の幅
-        height={300} // 元画像の高さ
-        layout="responsive" // width:100%; height:auto; に相当
-        className={`mv-bottom-curve absolute bottom-0 left-0 w-full z-10 transition-opacity duration-1000 ease-out ${
-          showMvBottomCurve ? "opacity-100" : "opacity-0"
-        }`}
-      />
+
       {/* Scroll Indicator */}
-      <div className="absolute right-4 bottom-4 md:right-8 md:bottom-8 flex flex-col items-center text-[#333333] text-sm font-bold mb-0 z-20">
-        <Image src="/images/mv-scroll-indicator.png" alt="Scroll Indicator" width={36} height={120} layout="fixed" />{" "}
-        {/* widthとheightを1.5倍に調整 */}
+      <div ref={scrollIndicatorRef} className="absolute bottom-10 z-10 opacity-0">
+        <Image src="/images/mv-scroll-indicator.png" alt="Scroll Down" width={50} height={50} />
       </div>
     </section>
   )

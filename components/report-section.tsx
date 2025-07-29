@@ -1,47 +1,145 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Download } from "lucide-react"
+"use client"
 
-export default function ReportSection() {
+import Image from "next/image"
+import { useEffect, useRef } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Button } from "@/components/ui/button"
+
+gsap.registerPlugin(ScrollTrigger)
+
+export function ReportSection() {
+  const sectionRef = useRef(null)
+  const titleRef = useRef(null)
+  const subtitleRef = useRef(null)
+  const imageRef = useRef(null)
+  const buttonRef = useRef(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    const title = titleRef.current
+    const subtitle = subtitleRef.current
+    const image = imageRef.current
+    const button = buttonRef.current
+
+    if (!section || !title || !subtitle || !image || !button) return
+
+    // Title and Subtitle animation
+    gsap.fromTo(
+      [title, subtitle],
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+      },
+    )
+
+    // Image animation
+    gsap.fromTo(
+      image,
+      { opacity: 0, scale: 0.8 },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: section,
+          start: "top 70%",
+          toggleActions: "play none none none",
+        },
+      },
+    )
+
+    // Button animation
+    gsap.fromTo(
+      button,
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: button,
+          start: "top 90%",
+          toggleActions: "play none none none",
+        },
+      },
+    )
+  }, [])
+
   return (
-    <section
-      className="relative w-full min-h-[100vh] flex flex-col items-center justify-start text-white px-4 md:px-6 overflow-hidden pt-40 pb-40"
-      style={{ background: "linear-gradient(180deg, #0A9F31 0%, #05A15E 50%, #01A285 90.38%)" }}
-    >
-      {/* Top curved background image */}
+    <section ref={sectionRef} className="relative w-full py-20 bg-[#F1F1F1] text-center overflow-hidden">
+      {/* Top curve image */}
       <Image
         src="/images/report-top-curve.png"
         alt="Top Curve"
-        width={1920} // 元画像の幅
-        height={300} // 元画像の高さ
+        layout="fill"
+        objectFit="cover"
+        quality={100}
         className="absolute top-0 left-0 w-full h-auto z-0"
-        style={{ objectPosition: "top" }}
+        style={{ transform: "translateY(-50%)" }}
       />
 
-      {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto pt-20 pb-20">
-        <h2 className="text-[94px] font-semibold mb-6 uppercase tracking-[1.88px]">IMPACT REPORT 2025</h2>
-        <p className="text-base md:text-lg mb-12 max-w-2xl">
-          重要課題と成果を発信。説明テキストを入れます。説明テキストを入れます。
-          <br />
-          説明テキストを入れます。説明テキストを入れます。説明テキストを入れます。
+      <div className="relative z-10 container mx-auto px-4">
+        <h2 ref={titleRef} className="text-4xl md:text-5xl font-bold text-[#333333] mb-4">
+          JRAのサステナビリティレポート
+        </h2>
+        <p ref={subtitleRef} className="text-lg md:text-xl text-[#333333] mb-12 max-w-3xl mx-auto">
+          JRAのサステナビリティに関する取り組みをまとめたレポートを公開しています。
         </p>
 
-        {/* Report preview placeholder */}
-        <div className="w-full max-w-[700px] bg-[#D9D9D9] rounded-lg mb-12 flex items-center justify-center h-[400px]">
-          <p className="text-[#666666] text-lg md:text-xl font-bold">レポートプレビュー</p>
+        <div ref={imageRef} className="relative w-full max-w-4xl mx-auto mb-12">
+          <Image
+            src="/images/net-touhyou-login.png"
+            alt="Report Image"
+            width={1000}
+            height={600}
+            layout="responsive"
+            objectFit="contain"
+            quality={90}
+          />
         </div>
 
-        {/* PDF Download Link */}
-        <Link
-          href="#"
-          className="flex items-center gap-2 text-white text-base md:text-lg underline hover:no-underline"
-          prefetch={false}
+        <Button
+          ref={buttonRef}
+          className="bg-gradient-to-r from-[#2EAAE4] to-[#50C4F2] text-white rounded-full px-8 py-6 text-lg md:text-xl font-bold shadow-lg hover:from-[#50C4F2] hover:to-[#2EAAE4] transition-all duration-300"
+          style={{ minWidth: "280px" }}
         >
-          PDFダウンロード
-          <Download className="w-5 h-5" />
-        </Link>
+          レポートを見る
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="ml-2"
+          >
+            <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="white" />
+            <path d="M11 8L15 12L11 16" stroke="#1FA9EA" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </Button>
       </div>
+
+      {/* Bottom curve image */}
+      <Image
+        src="/images/report-bottom-curve.png"
+        alt="Bottom Curve"
+        layout="fill"
+        objectFit="cover"
+        quality={100}
+        className="absolute bottom-0 left-0 w-full h-auto z-0"
+        style={{ transform: "translateY(50%)" }}
+      />
     </section>
   )
 }

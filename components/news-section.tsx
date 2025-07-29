@@ -1,91 +1,183 @@
-import {} from "lucide-react"
+"use client"
 
-export default function NewsSection() {
+import Link from "next/link"
+import { useEffect, useRef } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Button } from "@/components/ui/button"
+
+gsap.registerPlugin(ScrollTrigger)
+
+export function NewsSection() {
+  const sectionRef = useRef(null)
+  const titleRef = useRef(null)
+  const subtitleRef = useRef(null)
+  const newsGridRef = useRef(null)
+  const buttonRef = useRef(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    const title = titleRef.current
+    const subtitle = subtitleRef.current
+    const newsGrid = newsGridRef.current
+    const button = buttonRef.current
+
+    if (!section || !title || !subtitle || !newsGrid || !button) return
+
+    // Title and Subtitle animation
+    gsap.fromTo(
+      [title, subtitle],
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+      },
+    )
+
+    // News items animation
+    gsap.fromTo(
+      gsap.utils.toArray(".news-item"),
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: newsGrid,
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+      },
+    )
+
+    // Button animation
+    gsap.fromTo(
+      button,
+      { opacity: 0, scale: 0.8 },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: button,
+          start: "top 90%",
+          toggleActions: "play none none none",
+        },
+      },
+    )
+  }, [])
+
   const newsItems = [
     {
-      date: "2025.12.31",
-      text: "テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テ",
+      date: "2023.10.26",
+      category: "お知らせ",
+      title: "JRAのサステナビリティレポート2023を公開しました。",
+      link: "#",
     },
     {
-      date: "2025.12.31",
-      text: "テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テ",
+      date: "2023.10.26",
+      category: "お知らせ",
+      title: "JRAのサステナビリティレポート2023を公開しました。",
+      link: "#",
     },
     {
-      date: "2025.12.31",
-      text: "テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テ",
+      date: "2023.10.26",
+      category: "お知らせ",
+      title: "JRAのサステナビリティレポート2023を公開しました。",
+      link: "#",
     },
     {
-      date: "2025.12.30",
-      text: "新しいニュースアイテムです。新しいニュースアイテムです。新しいニュースアイテムです。",
+      date: "2023.10.26",
+      category: "お知らせ",
+      title: "JRAのサステナビリティレポート2023を公開しました。",
+      link: "#",
     },
     {
-      date: "2025.12.29",
-      text: "さらに別のニュースアイテムです。さらに別のニュースアイテムです。さらに別のニュースアイテムです。",
+      date: "2023.10.26",
+      category: "お知らせ",
+      title: "JRAのサステナビリティレポート2023を公開しました。",
+      link: "#",
+    },
+    {
+      date: "2023.10.26",
+      category: "お知らせ",
+      title: "JRAのサステナビリティレポート2023を公開しました。",
+      link: "#",
     },
   ]
 
   return (
-    <section className="relative w-full py-16 px-4 md:px-6 flex justify-center bg-white pb-40 pt-40">
-      {" "}
-      {/* 背景色を白色に変更 */}
-      {/* 左上の背景オブジェクト */}
-      <div
-        className="absolute flex-shrink-0 rounded-full z-0"
-        style={{
-          width: "1000px", // サイズを1/2に
-          height: "1000px", // サイズを1/2に
-          top: "-200px", // 位置を調整
-          left: "-200px", // 位置を左上に調整
-          background: "radial-gradient(50% 50% at 50% 50%, rgba(0, 170, 67, 0.10) 0%, rgba(0, 170, 67, 0.03) 100%)",
-          filter: "blur(100px)",
-        }}
-      ></div>
-      {/* 右下の背景オブジェクト */}
-      <div
-        className="absolute flex-shrink-0 rounded-full z-0"
-        style={{
-          width: "1000px", // サイズを1/2に
-          height: "1000px", // サイズを1/2に
-          bottom: "-500px", // 位置を調整
-          right: "-500px", // 位置を右下に調整
-          background: "radial-gradient(50% 50% at 50% 50%, rgba(126, 223, 84, 0.10) 0%, rgba(126, 223, 84, 0.03) 100%)",
-          filter: "blur(100px)",
-        }}
-      ></div>
-      <div className="w-full max-w-5xl bg-news-bg-alpha rounded-[10px] shadow-news-card p-8 md:p-12 flex flex-col md:flex-row relative overflow-hidden items-center z-10">
-        {" "}
-        {/* z-indexを追加して手前に表示 */}
-        {/* 左側のタイトル部分 */}
-        <div className="md:w-1/4 flex flex-col items-start md:pr-8 mb-8 md:mb-0">
-          <p className="text-jra-green font-semibold text-base text-center tracking-0.8 self-stretch mb-0">NEWS</p>
-          <h2 className="text-[#333] text-[40px] leading-normal self-stretch text-center font-bold">お知らせ</h2>
-        </div>
-        {/* 右側のニュースリスト部分 */}
-        <div className="md:w-3/4 flex flex-col max-h-[340px] overflow-y-scroll pr-8 custom-news-scrollbar">
+    <section ref={sectionRef} className="w-full py-20 bg-white text-center overflow-hidden">
+      <div className="container mx-auto px-4">
+        <h2 ref={titleRef} className="text-4xl md:text-5xl font-bold text-[#333333] mb-4">
+          ニュース
+        </h2>
+        <p ref={subtitleRef} className="text-lg md:text-xl text-[#333333] mb-12 max-w-3xl mx-auto">
+          JRAのサステナビリティに関する最新情報をお届けします。
+        </p>
+
+        <div ref={newsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {newsItems.map((item, index) => (
             <div
               key={index}
-              className="border-b border-gray-200 last:border-b-0 flex items-center justify-between py-8"
+              className="news-item bg-[#F1F1F1] rounded-lg shadow-md p-6 text-left transform transition-transform duration-300 hover:scale-105"
             >
-              <div className="flex-grow">
-                <p className="text-news-date-color text-sm font-medium leading-14px mb-1">{item.date}</p>
-                <p className="text-[#333] text-base font-medium leading-30px">{item.text}</p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                className="w-6 h-6 ml-4 flex-shrink-0"
-              >
-                <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="#00AA43" />
-                <path d="M11 8L15 12L11 16" stroke="white" strokeLinecap="round" />
-              </svg>
+              <p className="text-sm text-gray-500 mb-2">{item.date}</p>
+              <span className="inline-block bg-[#E0F2F7] text-[#1FA9EA] text-xs font-semibold px-3 py-1 rounded-full mb-4">
+                {item.category}
+              </span>
+              <h3 className="text-xl font-semibold text-[#333333] mb-4">{item.title}</h3>
+              <Link href={item.link} className="text-[#1FA9EA] font-medium hover:underline flex items-center">
+                詳しく見る
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="ml-1"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </Link>
             </div>
           ))}
         </div>
-        {/* 端の緑色の線 */}
+
+        <Button
+          ref={buttonRef}
+          className="bg-gradient-to-r from-[#2EAAE4] to-[#50C4F2] text-white rounded-full px-8 py-6 text-lg md:text-xl font-bold shadow-lg hover:from-[#50C4F2] hover:to-[#2EAAE4] transition-all duration-300"
+          style={{ minWidth: "280px" }}
+        >
+          もっと見る
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="ml-2"
+          >
+            <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="white" />
+            <path d="M11 8L15 12L11 16" stroke="#1FA9EA" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </Button>
       </div>
     </section>
   )
