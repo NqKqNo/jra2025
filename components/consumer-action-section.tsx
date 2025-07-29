@@ -68,7 +68,7 @@ export default function ConsumerActionSection() {
       id: "consumer-section-pin", // IDをユニークに
       trigger: section,
       start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-      end: "200vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
+      end: "300vh", // rightSidebarのスクロール可能な高さ分だけ固定を継続
       pin: true, // セクションを固定
       scrub: "power3.inOut", // スクロール位置とアニメーションの進行度を滑らかに連動
       snap: {
