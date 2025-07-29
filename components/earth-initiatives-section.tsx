@@ -221,12 +221,13 @@ export default function EarthInitiativesSection() {
       <div
         className="absolute bottom-0 right-0"
         style={{
-          width: "1516px",
-          height: "1516px",
+          width: "150vw",
+          height: "150vw",
           flexShrink: 0,
           aspectRatio: "1 / 1",
           zIndex: 0,
           pointerEvents: "none",
+          right: "-50vw",
         }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1916 1916" fill="none">
