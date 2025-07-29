@@ -62,7 +62,7 @@ export default function Header({ ref }: HeaderProps) {
       <nav className="bg-[#333333] py-0">
         {" "}
         {/* py-0 から py-3 に変更 */}
-        <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-1 gap-y-2 px-4 md:justify-center">
+        <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-1 gap-y-2 px-0 md:justify-center">
           <Link href="#" className="text-white hover:text-gray-200 font-bold text-sm mx-2.5" prefetch={false}>
             {" "}
             {/* text-xs から text-sm に変更 */}
