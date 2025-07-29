@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useCallback } from "react" // useRef, useCallbackを追加
+import { gsap } from "gsap" // GSAPをインポート
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 export default function EarthActionSection() {
@@ -63,35 +64,39 @@ export default function EarthActionSection() {
     const section = sectionRef.current
     const rightSidebar = rightSidebarRef.current
 
+    // 既存のScrollTriggerインスタンスをキルしてクリーンアップ
     if (scrollTriggerInstance.current) {
-      // If already exists, just refresh it
-      scrollTriggerInstance.current.refresh()
-    } else {
-      // Create ScrollTrigger if it doesn't exist
-      scrollTriggerInstance.current = ScrollTrigger.create({
-        id: "earth-section-pin", // IDを付与して管理しやすくする
-        trigger: section,
-        start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
-        // endを関数にして、rightSidebarのスクロール可能な高さに基づいて動的に計算
-        end: () => {
-          const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-          return `+=${scrollHeight}` // rightSidebarのスクロール可能な高さ分だけ固定を継続
-        },
-        pin: true, // セクションを固定
-        scrub: "power3.inOut", // これがイージングを制御する設定です
-        snap: {
-          snapTo: 1,
-          duration: 0.5,
-          ease: "power3.inOut",
-        },
-        onUpdate: (self) => {
-          // メインスクロールの進行度に応じてrightSidebarのscrollTopを更新
-          // onUpdate内でもscrollHeightを再計算することで、動的なコンテンツ変更に対応
-          const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
-          rightSidebar.scrollTop = self.progress * currentScrollHeight
-        },
-      })
+      scrollTriggerInstance.current.kill()
+      scrollTriggerInstance.current = null
     }
+
+    // ScrollTriggerを登録 (一度だけ実行されるように)
+    gsap.registerPlugin(ScrollTrigger)
+
+    // Create ScrollTrigger
+    scrollTriggerInstance.current = ScrollTrigger.create({
+      id: "earth-section-pin", // IDを付与して管理しやすくする
+      trigger: section,
+      start: "top top", // セクションのトップがビューポートのトップに到達したら固定を開始
+      // endを関数にして、rightSidebarのスクロール可能な高さに基づいて動的に計算
+      end: () => {
+        const scrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+        return `+=${scrollHeight}` // rightSidebarのスクロール可能な高さ分だけ固定を継続
+      },
+      pin: true, // セクションを固定
+      scrub: "power3.inOut", // これがイージングを制御する設定です
+      snap: {
+        snapTo: [0, 1], // スナップポイントを0（開始）と1（終了）に設定
+        duration: 0.2, // スナップアニメーションの持続時間
+        ease: "power3.inOut", // スナップアニメーションのイージング
+      },
+      onUpdate: (self) => {
+        // メインスクロールの進行度に応じてrightSidebarのscrollTopを更新
+        // onUpdate内でもscrollHeightを再計算することで、動的なコンテンツ変更に対応
+        const currentScrollHeight = rightSidebar.scrollHeight - rightSidebar.clientHeight
+        rightSidebar.scrollTop = self.progress * currentScrollHeight
+      },
+    })
   }, []) // 依存配列は空で、refは安定しているため
 
   useEffect(() => {
@@ -139,7 +144,7 @@ export default function EarthActionSection() {
       {/* Main content container */}
       <div className="w-full relative z-10 flex flex-col md:flex-row py-10 earth-action-content-container gap-y-0 pl-0 pt-0 pb-0 h-full">
         {/* Left Sidebar "with 地球" section */}
-        <div className="left-sidebar-container w-full md:w-[40%] flex justify-center md:justify-start earth-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
+        <div className="left-sidebar-container w-[40%] flex justify-center md:justify-start earth-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
           <div className="relative w-full h-full flex p-4 earth-action-sidebar-inner-wrapper px-0 py-0 items-start flex-row">
             <Image
               src="/images/with地球_left.png"
