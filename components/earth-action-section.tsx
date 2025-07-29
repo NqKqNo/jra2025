@@ -141,13 +141,15 @@ export default function EarthActionSection() {
         {/* Left Sidebar "with 地球" section */}
         <div className="left-sidebar-container w-full md:w-[40%] flex justify-center md:justify-start earth-action-sidebar-container items-center text-left md:pt-0 absolute top-0 left-0 h-full">
           <div className="relative w-full h-full flex p-4 earth-action-sidebar-inner-wrapper px-0 py-0 items-start flex-row">
-            <Image
-              src="/images/with地球_left.png"
-              alt="with 地球 JRAの環境保全活動"
-              layout="fill"
-              objectFit="cover"
-              priority
-            />
+            <Link href="https://v0-jra-2025-earth-action.vercel.app/earth-action" prefetch={false}>
+              <Image
+                src="/images/with地球_left.png"
+                alt="with 地球 JRAの環境保全活動"
+                layout="fill"
+                objectFit="cover"
+                priority
+              />
+            </Link>
           </div>
         </div>
 
@@ -158,39 +160,41 @@ export default function EarthActionSection() {
         >
           {sections.map((section) => (
             <div key={section.id} className="earth-action-section-group">
-              <div className="flex items-center mb-6 px-4 md:px-0 earth-action-section-header">
-                <div
-                  className="w-[88px] h-[52px] flex-shrink-0 rounded-[26px] border border-[#97C6DC] bg-[#F1F6F6] text-[#1FA9EA] flex items-center justify-center text-[30px] leading-[20px] font-light earth-action-section-number-circle"
-                  style={{
-                    boxShadow: "5px 5px 10px 0px #FFF, -3px -3px 5px 0px rgba(0, 0, 0, 0.10)",
-                  }}
-                >
-                  {section.id}
+              <Link href={`https://v0-jra-2025-earth-action.vercel.app/earth-action#section-${section.id}`} prefetch={false}>
+                <div className="flex items-center mb-6 px-4 md:px-0 earth-action-section-header">
+                  <div
+                    className="w-[88px] h-[52px] flex-shrink-0 rounded-[26px] border border-[#97C6DC] bg-[#F1F6F6] text-[#1FA9EA] flex items-center justify-center text-[30px] leading-[20px] font-light earth-action-section-number-circle"
+                    style={{
+                      boxShadow: "5px 5px 10px 0px #FFF, -3px -3px 5px 0px rgba(0, 0, 0, 0.10)",
+                    }}
+                  >
+                    {section.id}
+                  </div>
+                  <h3
+                    className="text-[28px] leading-[32px] ml-4 earth-action-section-title font-semibold"
+                    style={{
+                      background: "linear-gradient(87deg, #2EAAE4 0%, #50C4F2 102.59%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    {section.title}
+                  </h3>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    className="ml-2 earth-action-section-arrow-icon"
+                    style={{ transform: "rotate(0deg)", aspectRatio: "1/1" }}
+                  >
+                    <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="#1FA9EA" />
+                    <path d="M11 8L15 12L11 16" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
                 </div>
-                <h3
-                  className="text-[28px] leading-[32px] ml-4 earth-action-section-title font-semibold"
-                  style={{
-                    background: "linear-gradient(87deg, #2EAAE4 0%, #50C4F2 102.59%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  {section.title}
-                </h3>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="ml-2 earth-action-section-arrow-icon"
-                  style={{ transform: "rotate(0deg)", aspectRatio: "1/1" }}
-                >
-                  <ellipse cx="12" cy="12" rx="12" ry="12" transform="rotate(-90 12 12)" fill="#1FA9EA" />
-                  <path d="M11 8L15 12L11 16" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </div>
+              </Link>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-0 earth-action-cards-grid">
                 {section.items.map((item, itemIndex) =>
                   item.isEmpty ? (
