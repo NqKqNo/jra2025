@@ -2,48 +2,67 @@ import Image from "next/image"
 
 export default function CmGallerySection() {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 bg-[#F1F1F1] relative overflow-hidden">
-      <div className="container px-4 md:px-6 relative z-10">
-        <div className="flex flex-col items-center justify-center text-center space-y-6">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#333333]">CMギャラリー</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
-            <div className="relative w-full h-[200px] sm:h-[250px] md:h-[300px] rounded-lg overflow-hidden group">
-              <Image
-                src="/images/uma02-1.png"
-                alt="CM 1"
-                layout="fill"
-                objectFit="cover"
-                className="transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                <h3 className="text-white text-xl font-semibold">CMタイトル 1</h3>
-              </div>
-            </div>
-            <div className="relative w-full h-[200px] sm:h-[250px] md:h-[300px] rounded-lg overflow-hidden group">
-              <Image
-                src="/images/uma02-2.png"
-                alt="CM 2"
-                layout="fill"
-                objectFit="cover"
-                className="transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                <h3 className="text-white text-xl font-semibold">CMタイトル 2</h3>
-              </div>
-            </div>
-            <div className="relative w-full h-[200px] sm:h-[250px] md:h-[300px] rounded-lg overflow-hidden group">
-              <Image
-                src="/images/uma02-3.png"
-                alt="CM 3"
-                layout="fill"
-                objectFit="cover"
-                className="transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                <h3 className="text-white text-xl font-semibold">CMタイトル 3</h3>
-              </div>
-            </div>
+    <section
+      className="relative w-full px-4 md:px-6 flex flex-col items-center justify-center overflow-hidden py-60"
+      style={{
+        background: "#F1F1F1", // 背景色を#F1F1F1に変更
+      }}
+    >
+      <Image
+        src="/images/report-bottom-curve.png"
+        alt="Bottom Curve"
+        width={1920}
+        height={300}
+        className="absolute top-0 left-0 w-full h-auto z-0"
+        style={{ objectPosition: "top" }}
+      />
+      {/* 背景左上の装飾 */}
+      <div
+        className="absolute flex-shrink-0 rounded-full z-0"
+        style={{
+          width: "779px",
+          height: "779px",
+          top: "-200px", // 位置を調整
+          left: "-400px", // 位置を左上に調整
+          background: "radial-gradient(50% 50% at 50% 50%, rgba(0, 170, 67, 0.10) 0%, rgba(0, 170, 67, 0.03) 100%)",
+          filter: "blur(100px)",
+        }}
+      ></div>
+
+      {/* 背景右下の装飾 */}
+      <div
+        className="absolute flex-shrink-0 rounded-full z-0"
+        style={{
+          width: "1302px",
+          height: "1302px",
+          bottom: "-400px", // 位置を調整
+          right: "-600px", // 位置を右下に調整
+          background: "radial-gradient(50% 50% at 50% 50%, rgba(126, 223, 84, 0.10) 0%, rgba(126, 223, 84, 0.03) 100%)",
+          filter: "blur(100px)",
+        }}
+      ></div>
+
+      <div className="w-full max-w-4xl flex flex-col gap-y-10">
+        {/* トップバナー: Be With. CMギャラリー */}
+        <div className="w-full h-32 md:h-40 bg-[#D9D9D9] rounded-lg flex items-center justify-center shadow-md">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/bewith_logo.png" // 既存のロゴを使用
+              alt="Be With."
+              width={100}
+              height={50}
+              className="object-contain"
+            />
+            <span className="text-[#333333] text-lg md:text-xl font-bold">CMギャラリー</span>
           </div>
+        </div>
+        {/* 中央バナー: プロモーションコンテンツバナー (仮) */}
+        <div className="w-full h-32 md:h-40 bg-[#D9D9D9] rounded-lg flex items-center justify-center shadow-md">
+          <p className="text-[#666666] text-lg md:text-xl font-bold">※プロモーションコンテンツバナー (仮)</p>
+        </div>
+        {/* 下部バナー: プロモーションコンテンツバナー (仮) */}
+        <div className="w-full h-32 md:h-40 bg-[#D9D9D9] rounded-lg flex items-center justify-center shadow-md">
+          <p className="text-[#666666] text-lg md:text-xl font-bold">※プロモーションコンテンツバナー (仮)</p>
         </div>
       </div>
     </section>

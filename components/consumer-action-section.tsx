@@ -76,7 +76,7 @@ export default function ConsumerActionSection() {
       pin: true, // セクションを固定
       scrub: "power3.inOut", // スクロール位置とアニメーションの進行度を滑らかに連動
       snap: {
-        snapTo: [0, 1], // スナップポイントを0（開始）と1（終了）に設定
+        snapTo: [0, 1], // スクロールが開始時（0）と終了時（1）にピタッとスナップ
         duration: 0.2, // スナップアニメーションの持続時間
         ease: "power3.inOut", // スナップアニメーションのイージング
       },

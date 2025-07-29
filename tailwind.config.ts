@@ -24,55 +24,66 @@ const config = {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        foreground: "0 0% 3.9%",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "0 0% 9%",
+          foreground: "0 0% 98%",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "0 0% 96.1%",
+          foreground: "0 0% 9%",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "0 84.2% 60.2%",
+          foreground: "0 0% 98%",
+        },
+        muted: {
+          DEFAULT: "0 0% 96.1%",
+          foreground: "0 0% 45.1%",
+        },
+        accent: {
+          DEFAULT: "0 0% 96.1%",
+          foreground: "0 0% 9%",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "0 0% 100%",
+          foreground: "0 0% 3.9%",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "0 0% 100%",
+          foreground: "0 0% 3.9%",
         },
-        // Sidebar colors
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: {
-            DEFAULT: "hsl(var(--sidebar-primary))",
-            foreground: "hsl(var(--sidebar-primary-foreground))",
-          },
-          accent: {
-            DEFAULT: "hsl(var(--sidebar-accent))",
-            foreground: "hsl(var(--sidebar-accent-foreground))",
-          },
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
-        },
+        // カスタムカラー
+        "news-bg-alpha": "rgba(241, 241, 241, 0.60)",
+        "jra-green": "#00AA43",
+        "news-date-color": "rgba(51, 51, 51, 0.40)",
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        "10px": "10px",
+      },
+      boxShadow: {
+        "news-card": "-3px -3px 8px 0px #FFF, 5px 5px 10px 0px rgba(0, 0, 0, 0.10)",
+        "earth-circle": "5px 5px 10px 0px #FFF, -3px -3px 5px 0px rgba(0, 0, 0, 0.10)",
+      },
+      letterSpacing: {
+        "0.8": "0.8px",
+        "1.88": "1.88px", // 新しいカスタムletter-spacing
+      },
+      lineHeight: {
+        "14px": "14px",
+        "30px": "30px",
+        "32px": "32px",
+        "20px": "20px",
+        "26px": "26px", // 新しいカスタムline-height
+      },
+      fontSize: {
+        "28px": "28px",
+        "30px": "30px",
+        "16px": "16px", // 新しいカスタムfont-size
+        "94px": "94px", // 新しいカスタムfont-size
       },
       keyframes: {
         "accordion-down": {
