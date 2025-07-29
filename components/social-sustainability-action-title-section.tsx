@@ -92,39 +92,50 @@ export default function SocialSustainabilityActionTitleSection() {
   }, [])
 
   return (
-    <section className="relative w-full min-h-[300px] flex flex-col items-center justify-center px-4 md:px-6 overflow-hidden bg-gradient-to-b from-[#FFFFFF] to-[#F1F1F1] pb-40">
-      {/* タイトルテキストと馬の画像 */}
-      <div className="relative z-10 flex items-center justify-center social-sustainability-title-container">
-        <h2 className="text-center font-semibold text-[80px] leading-[92px] tracking-[1.6px] uppercase">
-          <span className="animated-text-line block">SOCIAL</span>
-          <span className="animated-text-line block">SUSTAINABILITY</span>
-          <span className="animated-text-line block">ACTION</span>
-        </h2>
-        {/* 馬の画像、h2の右側に絶対配置 */}
-        <Image
-          src="/images/uma02-3.png" // ファイル名を変更
-          alt="Running Horse"
-          width={100}
-          height={100}
-          className="absolute horse-animation horse-top"
-          style={{ right: "-100px", top: "-4px" }} // topはh2の行の高さに合わせて調整
-        />
-        <Image
-          src="/images/uma02-1.png" // ファイル名を変更
-          alt="Running Horse"
-          width={100}
-          height={100}
-          className="absolute horse-animation horse-middle"
-          style={{ right: "-100px", top: "88px" }} // topはh2の行の高さに合わせて調整
-        />
-        <Image
-          src="/images/uma02-2.png" // ファイル名を変更
-          alt="Running Horse"
-          width={100}
-          height={100}
-          className="absolute horse-animation horse-bottom"
-          style={{ right: "-100px", top: "180px" }} // topはh2の行の高さに合わせて調整
-        />
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-[#F1F1F1] relative overflow-hidden">
+      <div className="container px-4 md:px-6 relative z-10 social-sustainability-title-container">
+        <div className="flex flex-col items-center justify-center text-center space-y-6">
+          <Image
+            src="/images/social-sustainability-action-title.png"
+            alt="社会・サステナビリティ活動"
+            width={800}
+            height={150}
+            className="mx-auto"
+          />
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            JRAは、競馬事業を通じて得た収益を社会に還元し、持続可能な社会の実現に貢献しています。
+          </p>
+          <h2 className="text-center font-semibold text-[80px] leading-[92px] tracking-[1.6px] uppercase">
+            <span className="animated-text-line block">SOCIAL</span>
+            <span className="animated-text-line block">SUSTAINABILITY</span>
+            <span className="animated-text-line block">ACTION</span>
+          </h2>
+          {/* 馬の画像、h2の右側に絶対配置 */}
+          <Image
+            src="/images/uma02-3.png" // ファイル名を変更
+            alt="Running Horse"
+            width={100}
+            height={100}
+            className="absolute horse-animation horse-top"
+            style={{ right: "-100px", top: "-4px" }} // topはh2の行の高さに合わせて調整
+          />
+          <Image
+            src="/images/uma02-1.png" // ファイル名を変更
+            alt="Running Horse"
+            width={100}
+            height={100}
+            className="absolute horse-animation horse-middle"
+            style={{ right: "-100px", top: "88px" }} // topはh2の行の高さに合わせて調整
+          />
+          <Image
+            src="/images/uma02-2.png" // ファイル名を変更
+            alt="Running Horse"
+            width={100}
+            height={100}
+            className="absolute horse-animation horse-bottom"
+            style={{ right: "-100px", top: "180px" }} // topはh2の行の高さに合わせて調整
+          />
+        </div>
       </div>
     </section>
   )

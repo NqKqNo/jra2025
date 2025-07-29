@@ -1,41 +1,43 @@
 "use client"
 
 import { useEffect } from "react"
-import Lenis from "lenis"
+import Lenis from "@studio-freight/lenis"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
-gsap.registerPlugin(ScrollTrigger)
-
 export default function LenisSetup() {
   useEffect(() => {
-    // より滑らかな減速感を持つ三次イージング関数を定義 (元のcubicEaseOutに戻す)
-    const cubicEaseOut = (t: number) => 1 - Math.pow(1 - t, 3)
+    // GSAPとScrollTriggerを登録
+    gsap.registerPlugin(ScrollTrigger)
 
+    // Lenisを初期化
     const lenis = new Lenis({
-      duration: 0.8,
-      easing: cubicEaseOut, // 元のcubicEaseOutに戻す
-      smoothTouch: true,
-      // snap: ".action-section", // ScrollTriggerがスナップ/ピンニングを管理するため、Lenisのスナップは無効化
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Custom easing
+      direction: "vertical",
+      gestureDirection: "vertical",
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
     })
 
-    // LenisとScrollTriggerを同期
+    // LenisのスクロールイベントをGSAPのScrollTriggerに接続
     lenis.on("scroll", ScrollTrigger.update)
 
-    // ScrollTriggerにLenisをスクローラーとして使用するよう指示
-    ScrollTrigger.defaults({ scroller: lenis.scroll.instance })
+    // GSAPのtickごとにLenisを更新
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000)
+    })
 
-    function raf(time: DOMHighResTimeStamp) {
-      lenis.raf(time)
-      requestAnimationFrame(raf)
-    }
+    // GSAPのtickを一時停止しないように設定
+    gsap.ticker.lagSmoothing(0)
 
-    requestAnimationFrame(raf)
-
+    // クリーンアップ関数
     return () => {
       lenis.destroy()
-      // コンポーネントアンマウント時に全てのScrollTriggerインスタンスをクリーンアップ
-      ScrollTrigger.getAll().forEach((st) => st.kill())
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     }
   }, [])
 

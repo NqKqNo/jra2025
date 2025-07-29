@@ -1,43 +1,50 @@
+import Image from "next/image"
 import Link from "next/link"
-import { ExternalLinkIcon } from "lucide-react"
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#226600] py-8 text-white text-sm">
-      <div className="container mx-auto flex flex-col items-center justify-center px-4 md:px-6">
-        {/* ナビゲーションリンク */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-4">
-          <Link href="#" className="hover:underline" prefetch={false}>
-            馬券は20歳になってから
+    <footer className="w-full relative bg-[#F1F1F1] pt-12 pb-8 overflow-hidden">
+      {/* Background image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/footer-background.png"
+          alt="Footer Background"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+          className="opacity-50"
+        />
+      </div>
+
+      <div className="container px-4 md:px-6 relative z-10 flex flex-col items-center text-center">
+        <Image src="/images/JRA.png" alt="JRA Logo" width={150} height={50} className="mb-8" />
+        <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-8 text-gray-700 text-lg font-medium">
+          <Link href="#" className="hover:text-gray-900 transition-colors">
+            JRAについて
           </Link>
-          <span className="text-gray-400">|</span>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            JRAのギャンブル等依存症対策
+          <Link href="#" className="hover:text-gray-900 transition-colors">
+            競馬場・ウインズ
           </Link>
-          <span className="text-gray-400">|</span>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            払戻金の支払を受けた方へ
+          <Link href="#" className="hover:text-gray-900 transition-colors">
+            馬券の購入
           </Link>
-          <span className="text-gray-400">|</span>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            サイトマップ
+          <Link href="#" className="hover:text-gray-900 transition-colors">
+            レース情報
           </Link>
-          <span className="text-gray-400">|</span>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            リンク
+          <Link href="#" className="hover:text-gray-900 transition-colors">
+            馬・騎手・調教師
           </Link>
-          <span className="text-gray-400">|</span>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            ご利用に際して
+          <Link href="#" className="hover:text-gray-900 transition-colors">
+            競馬学校
           </Link>
-          <span className="text-gray-400">|</span>
-          <Link href="#" className="flex items-center gap-1 hover:underline" prefetch={false}>
-            Horse Racing in Japan
-            <ExternalLinkIcon className="w-3 h-3" />
+          <Link href="#" className="hover:text-gray-900 transition-colors">
+            馬事文化
           </Link>
-        </div>
-        {/* コピーライト */}
-        <p className="text-xs text-gray-300">Copyright © Japan Racing Association All rights reserved.</p>
+          <Link href="#" className="hover:text-gray-900 transition-colors">
+            社会貢献
+          </Link>
+        </nav>
+        <p className="text-gray-500 text-sm">© Japan Racing Association. All rights reserved.</p>
       </div>
     </footer>
   )

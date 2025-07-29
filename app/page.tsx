@@ -16,7 +16,7 @@ import Footer from "@/components/footer"
 import { useEffect, useRef, useState, useLayoutEffect } from "react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
-export default function Page() {
+export default function Home() {
   const headerRef = useRef<HTMLElement>(null)
   const [headerHeight, setHeaderHeight] = useState(143) // 推定されるヘッダーの高さ (px)
   const animationFrameId = useRef<number | null>(null)
@@ -94,23 +94,22 @@ export default function Page() {
   }, [headerHeight])
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header ref={headerRef} />
-      {/* すべてのコンテンツをヘッダーの高さ分のパディングを持つdivでラップ */}
-      <div style={{ paddingTop: `${headerHeight}px` }}>
-        <HeroSection headerHeight={headerHeight} />
-        <BannerSection />
-        <NewsSection />
+      <main className="flex-1">
+        <HeroSection />
         <BeWithHeroSection />
         <SocialSustainabilityActionTitleSection />
-        <EarthActionSection className="action-section" />
-        <LifeActionSection className="action-section" />
-        <SocietyActionSection className="action-section" />
-        <ConsumerActionSection className="action-section" />
+        <EarthActionSection />
+        <LifeActionSection />
+        <SocietyActionSection />
+        <ConsumerActionSection />
+        <NewsSection />
         <ReportSection />
+        <BannerSection />
         <CmGallerySection />
-        <Footer />
-      </div>
-    </>
+      </main>
+      <Footer />
+    </div>
   )
 }
