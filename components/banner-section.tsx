@@ -1,12 +1,23 @@
+"use client"
+
+import Image from "next/image"
+
 export default function BannerSection() {
   return (
     <section
-      className="relative w-full px-4 md:px-6 flex items-center justify-center bg-white py-40 pb-0" // 背景色を削除し、relativeを追加
+      className="relative w-full px-4 md:px-6 flex items-center justify-center bg-white py-20 md:py-40 pb-0"
     >
-      <div className="w-full max-w-4xl h-32 md:h-40 bg-[#D9D9D9] rounded-lg flex items-center justify-center shadow-md z-10">
-        {" "}
-        {/* z-indexを追加して手前に表示 */}
-        <p className="text-[#666666] text-lg md:text-xl font-bold">※スペシャルコンテンツバナー</p>
+      <div className="w-full max-w-4xl rounded-xl overflow-hidden shadow-lg z-10">
+        <a href="https://example.com" target="_blank" rel="noopener noreferrer">
+          <Image
+            src="/images/スペシャルコンテンツバナー.png" // public ディレクトリにある前提
+            alt="JRAサステナジャーニー バナー"
+            width={1200}
+            height={300}
+            className="w-full h-auto"
+            priority // 初期表示に必ず見せたい場合
+          />
+        </a>
       </div>
     </section>
   )
