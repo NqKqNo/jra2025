@@ -12,10 +12,10 @@ export default function ConsumerActionSection() {
   const sectionRef = useRef(null)
   const rightSidebarRef = useRef(null)
   const consumerIconContainerRef = useRef(null) // 生活者アイコン用のref
-  const scrollTriggerInstance = useRef<ScrollTrigger | null>(null) // ScrollTriggerインスタンスを保持するref
-  const resizeObserverAnimationFrameId = useRef<number | null>(null) // ResizeObserverのrequestAnimationFrame ID
-  const consumerAnimationTimeline = useRef<gsap.core.Timeline | null>(null) // 生活者アイコンのアニメーションタイムライン
-  const rightSidebarContentAnimationTimeline = useRef<gsap.core.Timeline | null>(null) // 右サイドバーコンテンツのアニメーションタイムライン
+  const scrollTriggerInstance = useRef(null) // ScrollTriggerインスタンスを保持するref
+  const resizeObserverAnimationFrameId = useRef(null) // ResizeObserverのrequestAnimationFrame ID
+  const consumerAnimationTimeline = useRef(null) // 生活者アイコンのアニメーションタイムライン
+  const rightSidebarContentAnimationTimeline = useRef(null) // 右サイドバーコンテンツのアニメーションタイムライン
 
   // sectionsデータをコンポーネント内に直接定義
   const sections = [
