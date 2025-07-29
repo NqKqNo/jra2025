@@ -94,9 +94,9 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
           <Image
             src="/images/with地球.png"
             alt="with 地球"
-            width={300}
-            height={300}
-            className="w-[130px] h-[130px] object-contain transition-transform duration-300 hover:scale-120"
+            width={130}
+            height={130}
+            className="w-[130px] h-[130px] object-contain transition-transform duration-300 hover:scale-1.2"
           />
         </Link>
         {/* with 生命 */}
