@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useEffect, useRef, useCallback } from "react" // useRef, useCallbackを追加
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import Link from "next/link"
 
 export default function EarthActionSection() {
   const sectionRef = useRef(null)
