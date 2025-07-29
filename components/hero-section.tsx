@@ -79,7 +79,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
       {/* MVセクション画面中央にロゴを追加 */}
 
       {/* アニメーションを追加するdiv - 親コンテナはレイアウトのみを担当 */}
-      <div className="mv-action-links relative z-20 flex flex-col md:flex-row gap-4 md:gap-4 mt-auto mb-0 md:mb-[50px]">
+      <div className="mv-action-links relative z-20 flex flex-col md:flex-row gap-4 md:gap-4 mt-auto mb-0 md:mb-[0px]">
         {" "}
         {/* z-indexをz-20に変更 */}
         {/* with 地球 */}
