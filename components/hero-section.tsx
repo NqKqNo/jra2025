@@ -96,7 +96,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
             alt="with 地球"
             width={300}
             height={300}
-            className="w-[154px] h-[154px] object-contain transition-transform duration-300 hover:scale-120"
+            className="w-[130px] h-[130px] object-contain transition-transform duration-300 hover:scale-120"
           />
         </Link>
         {/* with 生命 */}
@@ -113,7 +113,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
             alt="with 生命"
             width={300}
             height={300}
-            className="w-[154px] h-[154px] object-contain"
+            className="w-[130px] h-[130px] object-contain"
           />
         </Link>
         {/* with 社会 */}
@@ -130,7 +130,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
             alt="with 社会"
             width={300}
             height={300}
-            className="w-[154px] h-[154px] object-contain"
+            className="w-[130px] h-[130px] object-contain"
           />
         </Link>
         {/* with 生活者 */}
@@ -147,7 +147,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
             alt="with 馬"
             width={300}
             height={300}
-            className="w-[154px] h-[154px] object-contain transition-transform duration-300 hover:scale-120"
+            className="w-[130px] h-[130px] object-contain transition-transform duration-300 hover:scale-120"
           />
         </Link>
       </div>
