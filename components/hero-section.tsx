@@ -23,7 +23,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
     // mv-action-links のアニメーション
     const linksTimer = setTimeout(() => {
       setShowActionLinks(true)
-    }, 7000) // 6秒の遅延
+    }, 5000) // 6秒の遅延
 
     // MVロゴのアニメーション
     const logoTimer = setTimeout(() => {
@@ -33,7 +33,7 @@ export default function HeroSection({ headerHeight }: HeroSectionProps) {
     // mv-bottom-curve のアニメーション
     const bottomCurveTimer = setTimeout(() => {
       setShowMvBottomCurve(true)
-    }, 6000) // 5秒の遅延
+    }, 4000) // 5秒の遅延
 
     return () => {
       clearTimeout(circleTimer) // クリーンアップ
