@@ -139,7 +139,7 @@ export default function FullPageScrollComponent() {
   }
 
   return (
-    <div className="page-front">
+    <div className="ActionSection">
       {" "}
       {/* Replaces the <body> tag's class */}
       <div className="pageBase" data-index={activeIndex}>
