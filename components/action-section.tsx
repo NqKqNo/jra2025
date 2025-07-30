@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
-export default function ActionSection() {
 // SVG Icons - embedded directly due to gradients and specific paths
 const EarthIcon = () => (
   <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -94,7 +93,7 @@ const HorseIcon = () => (
   </svg>
 )
 
-export default function FullPageScrollComponent() {
+export default function ActionSection() {
   const fullPageScrollRef = useRef<HTMLDivElement>(null)
   const sectionRefs = useRef<(HTMLElement | null)[]>([])
   const [activeIndex, setActiveIndex] = useState(1) // Start with section 1 active
@@ -649,5 +648,4 @@ export default function FullPageScrollComponent() {
       </nav>
     </div>
   )
-}
 }
