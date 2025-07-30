@@ -104,7 +104,6 @@ export default function Page() {
         <NewsSection />
         <BeWithHeroSection />
         <SocialSustainabilityActionTitleSection />
-        <ActionSection />
         <EarthActionSection className="action-section" />
         <LifeActionSection className="action-section" />
         <SocietyActionSection className="action-section" />
