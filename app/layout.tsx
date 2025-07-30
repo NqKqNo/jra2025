@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import "./globals.css"
+import "./globals2.css"
 import LenisSetup from "@/components/lenis-setup"
 
 export const metadata: Metadata = {
